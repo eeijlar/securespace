@@ -1,0 +1,19 @@
+
+##########################################################################
+# $Id: removeheaders,v 1.6 2005/02/24 17:08:04 kirk Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+########################################################
+
+while (defined($ThisLine = <STDIN>)) {
+    $ThisLine =~ s/^... ... .. ..:..:.. .... [0123456789]+ //;
+    print $ThisLine;
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

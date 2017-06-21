@@ -1,0 +1,69 @@
+##################################################################
+#
+# based on clamav script ver. 0.88.2 for Logwatch.
+#
+# Written by S. Schimkat <www.schimkat.dk>.
+#
+# Find latest version here: www.schimkat.dk/clamav
+#
+##################################################################
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'};
+my $IgnoreUnmatched = $ENV{'clamav_ignoreunmatched'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+
+   if (
+       ( $ThisLine =~ /^clamav-milter (startup|shutdown) succeeded$/ ) or
+       ( $ThisLine =~ /^Quarantined infected mail as/ ) or 
+       ( $ThisLine =~ /^File quarantined as/ ) or
+       ( $ThisLine =~ /^ClamAv: mi_stop/ )) {
+       # We do not care about these.
+   } elsif (($ThisLine =~ /clean message from/)) {
+      $CleanMessage++;
+   } elsif (($Virus) = ($ThisLine =~ /.*: (.+?) Intercepted virus/i )) {
+      $VirusList{$Virus}++;
+   } elsif (($ChildLimit) = ($ThisLine =~ /hit max-children limit \((\d+ >= \d+)\): waiting for some to exit/)) {
+      $MaxChildrenLimit{$ChildLimit}++;
+   } elsif (($ThisLine =~ /^Stopping/)) {
+      $DaemonStop++;
+   } elsif (($ThisLine =~ /^Starting/)) {
+      $DaemonStart++;
+   } else {
+      push @OtherList,$ThisLine;
+   }
+}
+
+
+if (($DaemonStop) and ($Detail >= 5)) {
+   print "\nDaemon stopped: " . $DaemonStop . " Time(s)\n";
+}
+
+if (($DaemonStart) and ($Detail >= 5)) {
+   print "\nDaemon started: " . $DaemonStart . " Time(s)\n";
+}
+
+if (keys %MaxChildrenLimit) {
+   print "\nHit max-hildren limit:\n";
+   foreach $Limit (sort {$a cmp $b} keys %MaxChildrenLimit) {
+      print '   Limit ' . $Limit . ' children(s) exceeded ' . $MaxChildrenLimit{$Limit} . " Time(s)\n"
+   }
+}
+
+if ($CleanMessage) {
+   print "\nClean messages: " . $CleanMessage . " Message(s)\n";
+}
+
+if (keys %VirusList) {
+   print "\nInfected messages:\n";
+   foreach $Virus (sort {$a cmp $b} keys %VirusList) {
+      print '   ' . $Virus . ": ". $VirusList{$Virus} . " Message(s)\n";
+   }
+}
+
+if (($#OtherList >= 0) and (not $IgnoreUnmatched)){
+   print "\n**Unmatched Entries**\n";
+   print @OtherList;
+}
+
+exit(0);
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

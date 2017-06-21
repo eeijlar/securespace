@@ -1,0 +1,97 @@
+##########################################################################
+# $Id: pound,v 1.6 2005/02/24 17:08:05 kirk Exp $
+##########################################################################
+########################################################
+# This was written and is maintained by:
+#    luuk - luuk@planet.nl
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to luuk@planet.nl.
+#
+########################################################
+
+$Debug = $ENV{'LOGWATCH_DEBUG'};
+$DoLookup = $ENV{'pound_ip_lookup'};
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+$DoLookup = 1;
+sub LookupIP {
+   my ($name, $a1, $a2,$a3,$a4,$PackedAddr,$Addr);
+   $Addr = $_[0];
+   ($a1,$a2,$a3,$a4) = split /\./,$Addr;
+   $PackedAddr = pack('C4',$a1,$a2,$a3,$a4);
+   if ($DoLookup) {
+      if ($name = gethostbyaddr ($PackedAddr,2)) {
+         return ($name . " (" . $Addr . ")");
+      } else {
+         return ($Addr);
+      }
+   }
+   else {
+      return ($Addr);
+   }
+}
+
+if ( $Debug >= 5 ) {
+   print STDERR "\n\nDEBUG: Inside Pound Filter \n\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+   chomp($ThisLine);
+   if ($ThisLine =~ /error read from ([\d|\.]+): Succes/) {
+      $error{'read'}{$1}++;
+   } elsif ($ThisLine =~ /([\d|\.]+) \w+ \S+ \S+ - \S+ 301 Unauthorized/) {
+      $error{'unauthorized'}{$1}++;
+   } elsif ($ThisLine =~ /([\d|\.]+) \w+ \/exchange\/([\w|\.]+)\/.* \S+/) {
+      $user{$1}{$2}++;
+   } elsif ($ThisLine =~ /([\d|\.]+) \w+ \/.* (\d\d\d .*?)$/) {
+      $tmphost = $1; $tmpcode = $2;
+      $ip{$tmphost}{'total'}++;
+      $ip{$tmphost}{$tmpcode}++;
+   } else {
+      # Report any unmatched entries...
+      $OtherList{$ThisLine}++;
+   }
+}
+
+if ( ( $Detail >= 5 ) and (keys %user) ) {
+   print "\nUsage by user:\n";
+   foreach $host (keys %user) {
+      $rhost = LookupIP($host);
+      print "  $rhost:\n";
+      foreach $usr (keys %{$user{$host}}) {
+         print "    $usr: $user{$host}{$usr}\n";
+      }
+   }
+}
+
+if ( ( $Detail >= 10 ) and (keys %ip) ) {
+   print "\nUsage by host:\n";
+   foreach $host (keys %ip) {
+      $rhost = LookupIP($host);
+      print "  $rhost: $ip{$host}{'total'}\n";
+      foreach $code (keys %{$ip{$host}}) {
+         print "    $code: $ip{$host}{$code}\n" if ($code ne 'total');
+      }
+   }
+}
+
+if ( ( $Detail >= 5 ) and (keys %error) ) {
+   print "\nError read from - Succes message:\n";
+   foreach $host (keys %{$error{'read'}}) {
+      $rhost = LookupIP($host);
+      print "  $rhost: $error{'read'}{$host} \n";
+   }
+}
+
+if (keys %OtherList) {
+   print "\n**Unmatched Entries**\n";
+   foreach $line (sort {$a cmp $b} keys %OtherList) {
+      print "   $line: $OtherList{$line} Time(s)\n";
+   }
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

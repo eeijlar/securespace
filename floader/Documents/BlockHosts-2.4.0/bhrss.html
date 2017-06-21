@@ -1,0 +1,51 @@
+<html><body><h2>bhrss.py</h2>
+
+<pre>
+version:     1.1.0
+
+</pre>
+
+<h3>DETAILS</h3>
+
+<pre>
+    CGI script to provide a RSS feed of currently blocked and watched IP
+    addresses.
+    
+    This script needs to be installed in the "cgi-bin" directory or similar,
+    under a Web server on the same machine that is running blockhosts.py.
+    Also requires that the default blockhosts configuration file be
+    available for reading values for hosts block file name, etc.
+    
+    Replace the URL below with the correct path to bhrss.py on your web
+    server:
+       http://.../cgi-bin/bhrss.py              [to get all blocked]
+       http://.../cgi-bin/bhrss.py?q=watching   [to get all blocked as well as watched addresses]
+    
+    The two variations both provide a RSS feed containing a list of IP
+    addresses, with count of failed attempts, and time when the entry was
+    added to the block file (/etc/hosts.allow). The first variation, with no
+    arguments, provides list of all addresses currently being blocked. The
+    second variation, with ?q=watching in the URI, lists all blocked
+    addresses, as well as the addresses that are currently being watched, but
+    not yet blocked.
+    
+    ====
+    bhrss.py Script License
+    This work is hereby released into the Public Domain.
+    To view a copy of the public domain dedication, visit
+    http://creativecommons.org/licenses/publicdomain/ or send a letter to
+    Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+    
+    Author: Avinash Chopde <avinash@acm.org>
+    Created: February 2007
+    http://www.aczoom.com/cms/blockhosts/
+    
+    
+See file INSTALL for installation instructions.
+
+See file blockhosts.cfg for site configuration parameters.
+
+Visit blockhosts home page and forum for details and discussions.
+
+</pre></body></html>
+

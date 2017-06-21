@@ -1,0 +1,45 @@
+
+use strict;
+
+sub hostcmp {
+  my ($a,$b) = @_;
+
+  my ($an) = ($a =~ /(\d*)$/);
+  my $ap = $`;
+  my ($bn) = ($b =~ /(\d*)$/);
+  my $bp = $`;
+  return ($ap cmp $bp) || ($an <=> $bn);
+}
+
+my $TempDir = $ENV{'LOGWATCH_TEMP_DIR'};
+
+my ($line, $host,$tothost);
+my %hostlist;
+my $HostFile = ("$TempDir/hostfile");
+if (-f $HostFile) {
+   open (TEMPFILE,$HostFile);
+   foreach (<TEMPFILE>) {
+      chomp;
+      $hostlist{$_} = 1;
+   }
+   close (TEMPFILE);
+}
+
+while (defined($line = <STDIN>)) {
+   if ($line =~ m/^... .. ..:..:.. (\S*)/io) {
+      $host = $1;
+      $hostlist{$host} = 1 unless defined $hostlist{$host};
+   }
+}
+
+open (TEMPFILE,">$HostFile") || die $!;
+foreach $tothost (sort {&hostcmp($a,$b)} keys %hostlist) {
+   chomp $tothost;
+   if (length($tothost) == "0") {
+   } else {
+      print TEMPFILE "$tothost\n";
+   }
+}
+close TEMPFILE;
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

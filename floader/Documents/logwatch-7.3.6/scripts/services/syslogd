@@ -1,0 +1,55 @@
+
+##########################################################################
+# $Id: syslogd,v 1.15 2006/08/23 21:37:23 bjorn Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+########################################################
+
+my $Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+   chomp($ThisLine);
+   if ( $ThisLine =~ /^(exiting|going down) on signal 15$/ ) {
+      #$Kills++;
+   }
+   elsif ($ThisLine =~ /^syslogd .* restart\.$/) {
+      $Starts++;
+   }
+   elsif ($ThisLine =~ /^restart( \(remote reception\))?\.?$/) {
+      $Starts++;
+   }
+   elsif ($ThisLine =~ /^Cannot glue message parts together$/) {
+      $Errors++;
+   }
+   else {
+      # Report any unmatched entries...
+      chomp($ThisLine);
+      $OtherList{$ThisLine}++;
+   }
+}
+
+if ($Errors) {
+    print "\nCould not glue message parts together " . $Errors . " Time(s)\n";
+}
+
+if ($Starts and ($Detail >=10) ) {
+    print "\nSyslogd started " . $Starts . " Time(s)\n";
+}
+
+if (keys %OtherList) {
+   print "\n**** Unmatched entries ****\n";
+   foreach $Error (keys %OtherList) {
+      print "    $Error : $OtherList{$Error} Times\n";
+   }
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

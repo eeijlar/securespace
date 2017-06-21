@@ -1,0 +1,35 @@
+##########################################################################
+# $Id: applystddate,v 1.18 2005/10/22 00:19:56 bjorn Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to logwatch-devel@logwatch.org
+########################################################
+
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+$SearchDate = TimeFilter('%b %e %H:%M:%S');
+
+# The date might be "Dec 09", but it needs to be "Dec  9"...
+#$SearchDate =~ s/ 0/  /;
+
+if ( $Debug > 5 ) {
+   print STDERR "DEBUG: Inside ApplyStdDate...\n";
+   print STDERR "DEBUG: Looking For: " . $SearchDate . "\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+   if ($ThisLine =~ m/^$SearchDate /o) {
+      print $ThisLine;
+   } elsif ($ThisLine =~ m/(Mon|Tue|Wed|Thu|Fri|Sat|Sun) $SearchDate \d{4}/o) {
+      print $ThisLine;
+   }
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

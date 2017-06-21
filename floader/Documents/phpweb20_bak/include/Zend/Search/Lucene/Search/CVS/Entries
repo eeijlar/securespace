@@ -1,0 +1,15 @@
+/BooleanExpressionRecognizer.php/1.1/Wed Jul 16 22:26:59 2008//
+D/Query////
+/Query.php/1.1/Wed Jul 16 22:26:59 2008//
+D/QueryEntry////
+/QueryEntry.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryHit.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryLexer.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryParser.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryParserContext.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryParserException.php/1.1/Wed Jul 16 22:26:59 2008//
+/QueryToken.php/1.1/Wed Jul 16 22:26:59 2008//
+D/Similarity////
+/Similarity.php/1.1/Wed Jul 16 22:26:59 2008//
+D/Weight////
+/Weight.php/1.1/Wed Jul 16 22:26:59 2008//

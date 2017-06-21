@@ -1,0 +1,58 @@
+[Fri Sep 03 23:50:14 2010] [error] [client 62.193.224.144] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 03 23:50:14 2010] [error] [client 62.193.224.144] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Mon Sep 06 12:38:57 2010] [error] [client 85.114.133.38] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Mon Sep 06 12:38:57 2010] [error] [client 85.114.133.38] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 07 18:55:04 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 07 18:55:04 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 07 20:02:43 2010] [error] [client 212.40.171.21] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 07 20:02:43 2010] [error] [client 212.40.171.21] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 08 09:31:57 2010] [error] [client 212.40.171.21] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 08 09:31:57 2010] [error] [client 212.40.171.21] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 09 17:12:02 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 09 17:12:02 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 09 19:06:43 2010] [error] [client 187.45.214.10] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 09 19:06:43 2010] [error] [client 187.45.214.10] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 10 06:22:47 2010] [error] [client 188.173.31.6] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 10 06:22:47 2010] [error] [client 188.173.31.6] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 10 22:32:25 2010] [error] [client 85.114.141.200] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 10 22:32:25 2010] [error] [client 85.114.141.200] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sat Sep 11 16:39:19 2010] [error] [client 94.136.45.55] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sat Sep 11 16:39:19 2010] [error] [client 94.136.45.55] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Sep 12 16:53:24 2010] [error] [client 75.125.243.50] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Sep 12 16:53:24 2010] [error] [client 75.125.243.50] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 15 08:14:59 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 15 08:14:59 2010] [error] [client 85.25.7.93] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Thu Sep 16 01:25:59 2010] [error] [client 82.51.251.179] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Thu Sep 16 23:46:56 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Sep 16 23:46:56 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 17 09:01:23 2010] [error] [client 85.119.156.210] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 17 09:01:23 2010] [error] [client 85.119.156.210] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 17 23:44:47 2010] [error] [client 87.106.182.104] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Sep 17 23:44:47 2010] [error] [client 87.106.182.104] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Sep 19 10:16:04 2010] [error] [client 142.104.64.195] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.test0:)
+[Sun Sep 19 10:16:04 2010] [error] [client 142.104.64.195] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.test0:)
+[Tue Sep 21 21:24:02 2010] [error] [client 88.80.215.240] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 21 21:24:02 2010] [error] [client 88.80.215.240] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 22 19:23:27 2010] [error] [client 91.193.143.12] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 22 19:23:27 2010] [error] [client 91.193.143.12] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 22 22:12:06 2010] [error] [client 202.133.99.45] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 22 22:12:06 2010] [error] [client 202.133.99.45] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sat Sep 25 18:13:39 2010] [notice] caught SIGTERM, shutting down
+[Sat Sep 25 18:13:43 2010] [notice] suEXEC mechanism enabled (wrapper: /usr/sbin/suexec2)
+[Sat Sep 25 18:13:45 2010] [notice] Apache/2.2.4 (Linux/SUSE) mod_ssl/2.2.4 OpenSSL/0.9.8e PHP/5.2.4 with Suhosin-Patch configured -- resuming normal operations
+[Sat Sep 25 21:36:04 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sat Sep 25 21:36:04 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Sep 26 21:36:02 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Sep 26 21:36:02 2010] [error] [client 85.119.152.135] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 28 04:45:56 2010] [error] [client 83.242.145.34] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 28 04:45:56 2010] [error] [client 83.242.145.34] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Sep 28 16:37:25 2010] [notice] Graceful restart requested, doing restart
+[Tue Sep 28 16:37:25 2010] [error] (9)Bad file descriptor: apr_socket_accept: (client socket)
+[Tue Sep 28 16:37:28 2010] [notice] Apache/2.2.4 (Linux/SUSE) mod_ssl/2.2.4 OpenSSL/0.9.8e PHP/5.2.4 with Suhosin-Patch configured -- resuming normal operations
+[Wed Sep 29 01:50:56 2010] [error] [client 88.80.215.240] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Sep 29 01:50:56 2010] [error] [client 88.80.215.240] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)

@@ -1,0 +1,45 @@
+
+##########################################################################
+# $Id: pam,v 1.10 2005/02/24 17:08:05 kirk Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+########################################################
+
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+    if ( ( $ThisLine =~ /^pam_get_user: no username obtained$/ ) or
+         ( $ThisLine =~ /^pam_end: NULL pam handle passed/ ) ) { 
+        # We don't care about these
+    }
+    elsif ( $ThisLine =~ s/^FAILED LOGIN SESSION FROM ([^ ]+) FOR .*$/$1/ ) {
+        $FailedLogins{$ThisLine}++;
+    }
+    else {
+        # Report any unmatched entries...
+        push @OtherList,$ThisLine;
+    }
+}
+
+if ( (keys %FailedLogins) and ($Detail >= 10) ) {
+   print "\nFailed Login Sessions:\n";
+   foreach $ThisOne (keys %FailedLogins) {
+      print "   " . $FailedLogins{$ThisOne} . " from " . $ThisOne;
+   }
+}
+
+if ($#OtherList >= 0) {
+   print "\n**Unmatched Entries**\n";
+   print @OtherList;
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

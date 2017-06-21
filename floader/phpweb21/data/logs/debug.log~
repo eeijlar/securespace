@@ -1,0 +1,9 @@
+2008-10-05T23:26:12+01:00 NOTICE (5): yah
+2008-10-05T23:26:19+01:00 NOTICE (5): yah
+2008-10-05T23:26:19+01:00 NOTICE (5): SQL Insert /srv: INSERT INTO `blog_posts_images` (`filename`, `post_id`, `ranking`) VALUES (?, ?, ?)
+2008-10-05T23:26:19+01:00 NOTICE (5): /srv/www/phpweb20/data/uploaded-files/8
+2008-10-05T23:26:49+01:00 NOTICE (5): yah
+2008-10-05T23:26:57+01:00 NOTICE (5): yah
+2008-10-05T23:26:57+01:00 NOTICE (5): SQL Insert /srv: INSERT INTO `blog_posts_images` (`filename`, `post_id`, `ranking`) VALUES (?, ?, ?)
+2008-10-05T23:26:57+01:00 NOTICE (5): /srv/www/phpweb20/data/uploaded-files/9
+2008-10-05T23:31:40+01:00 NOTICE (5): SQL Insert /srv: INSERT INTO `blog_posts_images` (`filename`, `post_id`, `ranking`) VALUES (?, ?, ?)

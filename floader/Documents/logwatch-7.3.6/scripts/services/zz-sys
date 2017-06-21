@@ -1,0 +1,46 @@
+
+##########################################################################
+# $Id: zz-sys,v 1.1 2006/02/19 23:12:50 bjorn Exp $
+##########################################################################
+# $Log: zz-sys,v $
+# Revision 1.1  2006/02/19 23:12:50  bjorn
+# Get configuration info from system, based on script by Laurent Dufour.
+#
+##########################################################################
+
+# This script prints out information about the CPU(s) and physical memory.
+# It obtains the information from the Sys::CPU and Sys::MemInfo perl modules,
+# so these must be installed.
+
+# Note that the number of CPUs is not the number of physical CPU chips;
+# CPUs with Hyperthreading or multiple cores affect the number of CPUs
+# displayed.
+
+eval "require Sys::CPU";
+if ($@) {
+   print STDERR "No Sys::CPU module installed.  To install, execute the command:\n";
+   print STDERR "   perl -MCPAN -e 'install Sys::CPU' \n\n";
+} else {
+   import Sys::CPU;
+   print "   CPU:     " . Sys::CPU::cpu_count() . " " . Sys::CPU::cpu_type() . " at " . Sys::CPU::cpu_clock() . "MHz\n";
+}
+
+eval "require Sys::MemInfo";
+if ($@) {
+   print STDERR "No Sys::MemInfo module installed.  To install, execute the command:\n";
+   print STDERR "   perl -MCPAN -e 'install Sys::MemInfo' \n\n";
+} else {
+   import Sys::MemInfo qw(totalmem);
+   print "   Memory:  " . ((&totalmem - (&totalmem % (1024*1024))) / (1024*1024)) . " MB\n";
+}
+
+
+use POSIX qw(uname);
+my ($OSname, $hostname, $release, $version, $machine) = POSIX::uname();
+print "   Machine: $machine\n";
+my $OStitle;
+$OStitle = $OSname;
+$OStitle = "Solaris" if ($OSname eq "SunOS" && $release >= 2);
+print "   Release: $OStitle $release\n";
+
+

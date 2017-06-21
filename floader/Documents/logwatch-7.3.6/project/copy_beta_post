@@ -1,0 +1,5 @@
+output/changes.html /var/www/mason/html/projects/logwatch/tabs/docs/changes.html
+output/recentchanges.html /var/www/mason/html/projects/logwatch/tabs/download/beta-changes.html
+output/download.html /var/www/mason/html/projects/logwatch/tabs/download/beta-tar-download.html
+output/rpm-download.html /var/www/mason/html/projects/logwatch/tabs/download/beta-rpm-download.html
+output/release_date.txt /var/www/mason/html/projects/logwatch/beta-last-release.comp

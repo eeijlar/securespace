@@ -1,0 +1,37 @@
+###############################################################################
+# $Id: applytaidate,v 1.1 2005/09/07 00:37:59 bjorn Exp $
+###############################################################################
+# $Log: applytaidate,v $
+# Revision 1.1  2005/09/07 00:37:59  bjorn
+# New qmail multilog files written by Bob Hutchinson
+#
+###############################################################################
+# converts 'tai' style datestamps to something more readable and parseable
+# this version of applytaidate uses Logwatch.pm and no longer uses tai64nlocal
+###############################################################################
+
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+my $SearchDate = TimeFilter('%a %b %e %H:%M:%S %Y');
+
+if ( $Debug > 5 ) {
+	print STDERR "DEBUG: Inside ApplyTaiDate...\n";
+	print STDERR "DEBUG: Looking For: (" . $SearchDate . ")\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+	# localtime may only work on 32 bits (year 2038), but we pass 36 bits
+	# for systems that support larger localtime (test this)
+	#if ($ThisLine =~ s/^\@40{6}([0-9a-f]{9})[0-9a-f]{8}\s// ) {
+
+	# We pass only 32 bits due to localtime limits (not Y2038 compliant)
+	if ($ThisLine =~ s/^\@40{7}([0-9a-f]{8})[0-9a-f]{8}\s// ) {
+		my $NewTimeStamp = scalar(localtime(hex($1)));
+		if ($NewTimeStamp =~ /^$SearchDate$/) {
+			print $ThisLine;
+			if ( $Debug > 5 ) { print STDERR "DEBUG: NewTimeStamp: " . $NewTimeStamp . " ($ThisLine)\n"; }
+		}
+	}
+}

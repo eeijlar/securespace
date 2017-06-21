@@ -1,0 +1,47 @@
+
+##########################################################################
+# $Id: sshd2,v 1.8 2005/02/24 17:08:05 kirk Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Gerald Teschl <gerald@esi.ac.at>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to and kirk@kaybee.org.
+########################################################
+
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+   if ( ($ThisLine =~ /^Daemon is running.$/) or
+         ($ThisLine =~ /^Listener created on port .*$/) or
+         ($ThisLine =~ /^sshd2$/) ) {
+      # don't care about these
+   }
+   elsif ( $ThisLine =~ /^Starting sshd2: $/ ) {
+      $Started++;
+   }
+   else {
+      # Report any unmatched entries...
+      chomp($ThisLine);
+      $OtherList{$ThisLine}++;
+   }
+}
+
+if ( ($Detail >= 10) and ($Started) ) {
+   print "\nStatistics:\n";
+   print "   Sshd2 started: $Started Time(s)\n";
+}
+
+if (keys %OtherList) {
+   print "\n**Unmatched Entries**\n";
+   foreach $ThisOne (keys %OtherList) {
+      print "$ThisOne: $OtherList{$ThisOne} Time(s)\n";
+   }
+}                                                                                       
+    
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

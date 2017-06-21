@@ -1,0 +1,2 @@
+function calculateTotal(inputItem,sessionCost){document.selectionForm.quantity.value=parseInt(inputItem.value);document.selectionForm.amount.value=parseInt(sessionCost);return("\u20AC"+(inputItem.value*sessionCost));}
+function InitForm(){document.selectionForm.total.value='$0';document.selectionForm.calculatedTotal.value=0;document.selectionForm.previouslySelectedRadioButton.value=0;for(i=0;i<document.selectionForm.elements.length;i++){if(document.selectionForm.elements[i].type=='radio'){document.selectionForm.elements[i].checked=false;}}}

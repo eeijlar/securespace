@@ -1,0 +1,26 @@
+Options +FollowSymLinks
+
+RewriteEngine on
+RewriteBase /
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^account https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^mail https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^admin https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^payment https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^profile https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^clients https://%{SERVER_NAME}%{REQUEST_URI}  [R,L]
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1

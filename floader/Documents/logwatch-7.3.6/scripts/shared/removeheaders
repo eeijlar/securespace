@@ -1,0 +1,30 @@
+
+##########################################################################
+# $Id: removeheaders,v 1.16 2006/01/04 21:11:43 bjorn Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+#
+########################################################
+
+# Removes the beginning of each line of a standard /var/log/messages-style
+# logfile.
+
+while (defined($ThisLine = <STDIN>)) {
+    #First line is Solaris ID tag style -mgt
+    $ThisLine =~ s/^... .. ..:..:.. [^ ]* [^\[:]*(\[\d*\])?: \[ID \d+( \w+\.\w+)?] //;
+    $ThisLine =~ s/^... .. ..:..:.. [^ ]* [^\[:]*(\[\d*\])?: //;
+    # the following is for those logs that use the service name, but do not
+    # append the ':' right after (for example, syslogd restart).  Presumably
+    # OnlyService is called before RemoveHeaders, so this should only be done
+    # on the required services.
+    $ThisLine =~ s/^... .. ..:..:.. [^ ]* //;
+    print $ThisLine;
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

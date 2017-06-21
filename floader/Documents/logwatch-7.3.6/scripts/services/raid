@@ -1,0 +1,34 @@
+
+while (defined($_ = <STDIN>)) {
+   chomp;
+   $print = 0;
+   if (/^(... .. ..:..:..)/) {
+      $time = $1;
+   }
+   s/^... .. ..:..:.. [^ ]* [^ ]*\[\d*\]: //;
+   s/^... .. ..:..:.. [^ ]* [^ ]*: //;
+
+   if (/^raid/) {
+      if (/failure/) { $print = 1; }
+      if (/redirecting/) { $print = 1; }
+      if (/rescheduling/) { $print = 1; }
+   } elsif (/^md/) {
+      if (/skipping faulty/) { $print = 1; }
+      if (/degraded mode/)  { $print = 1; }
+   } elsif (/AppleRAID/){
+      if (/restarting/) { $print = 1; }
+      if (/rebuild/) { $print = 1; }
+      if (/error/) { $print = 1; }
+      if (/offline/) { $print = 1; }
+      if (/online/) { $print = 1; }
+      if (/ignoring/) { $print = 1; }
+   } else {
+      next;
+   }
+   if ($print) {
+      print("$time $_ \n");
+   }
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

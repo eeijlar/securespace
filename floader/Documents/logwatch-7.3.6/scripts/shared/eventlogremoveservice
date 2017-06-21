@@ -1,0 +1,38 @@
+##########################################################################
+# $Id: eventlogremoveservice,v 1.1 2007/04/28 22:50:24 bjorn Exp $
+##########################################################################
+# $Log: eventlogremoveservice,v $
+# Revision 1.1  2007/04/28 22:50:24  bjorn
+# Added files for Windows Event Log, by Orion Poplawski.  These are for
+# Windows events logged to a server, using Snare Agent or similar.
+#
+##########################################################################
+use strict;
+
+my ($ServiceName, $ThisLine);
+my ($linesin, $linesout) = (0, 0);
+
+# This will remove the unwanted service from a logfile
+# in a Windows Event Log format.  Case insensitive
+
+#Apr  2 16:21:02 hotwheels hotwheels MSWinEventLog       1       Security        26      Mon Apr 02 16:21:02 2007  861     Security        SYSTEM  User    Failure Audit   HOTWHEELSDetailed Tracking                The Windows Firewall has detected an application listening for incoming traffic.        Name: -    Path: C:\Program Files\Snare\SnareCore.exe    Process identifier: 2656    User account: SYSTEM    User domain: NT AUTHORITY    Service: Yes    RPC server: No    IP version: IPv4    IP protocol: TCP    Port number: 6161    Allowed: No    User notified: No       18
+
+if ( $ENV{'LOGWATCH_DEBUG'} > 5 ) {
+   print STDERR "DEBUG: Inside RemoveService...\n";
+}
+
+$ServiceName = $ARGV[0];
+
+while (defined($ThisLine = <STDIN>)) {
+   $linesin++;
+   unless ($ThisLine =~ m/^... .. ..:..:.. \w+ \w+ \w+\t\d+\t$ServiceName\t\d/oi) {
+      $linesout++;
+      print $ThisLine;
+   }
+}
+
+if ( $ENV{'LOGWATCH_DEBUG'} > 5 ) {
+   print STDERR "DEBUG: Inside RemoveService: $linesin Lines In, $linesout Lines Out\n";
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

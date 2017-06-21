@@ -1,0 +1,24 @@
+
+###########################################################################
+# $Id: arpwatch,v 1.8 2005/02/24 17:08:04 kirk Exp $
+###########################################################################
+
+my $Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+   chomp($ThisLine);
+   next if ($ThisLine eq "");
+   $ARPWatch{$ThisLine}++;
+}
+
+if ( ($Detail >= 10) and (keys %ARPWatch) ) {
+   print "\n";
+   foreach $ThisOne (sort {$a cmp $b} keys %ARPWatch) {
+      print $ThisOne . "\n";
+   }
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

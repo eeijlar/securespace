@@ -1,0 +1,53 @@
+
+##########################################################################
+# $Id: applydate,v 1.11 2005/06/28 01:40:00 mike Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Luuk de Boer <luuk@pi.net>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to logwatch-devel@logwatch.org
+########################################################
+
+use POSIX qw(strftime);
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+my $time = time;
+
+$SearchDate = TimeFilter('%m/%d/%y %H:%M:%S');
+$SearchDate2 = TimeFilter('%Y/%m/%d %H:%M:%S');
+
+if ( $Debug > 5 ) {
+   print STDERR "DEBUG: Inside ApplyDate (samba)...\n";
+   print STDERR "DEBUG: Looking For: $SearchDate or $SearchDate2\n";
+}
+
+$ThisLine = <STDIN>;
+mainloop: while ($ThisLine) {
+   if ($ThisLine =~ m/^$SearchDate /o) {
+      print $ThisLine;
+   }
+   elsif ($ThisLine =~ m/^\[$SearchDate2/o) {
+      chomp($ThisLine);
+      print $ThisLine;
+      while ($ThisLine = <STDIN>) {
+         if ($ThisLine =~ m/^\[....\/..\/.. ..:..:../) {
+            # Found next entry
+            print "\n";
+            next mainloop;
+         } else {
+            chomp($ThisLine);
+            print $ThisLine;
+         }
+      }
+      print "\n";
+   } else {
+      $ThisLine = <STDIN>;
+   }
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

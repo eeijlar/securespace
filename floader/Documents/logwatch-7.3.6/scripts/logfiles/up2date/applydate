@@ -1,0 +1,26 @@
+
+##########################################################################
+# $Id: applydate,v 1.8 2005/05/03 19:33:39 bjorn Exp $
+##########################################################################
+
+use POSIX qw(strftime);
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+my $time = time;
+
+$SearchDate = TimeFilter('%a %b %e %H:%M:%S %Y');
+
+if ( $Debug > 5 ) {
+   print STDERR "DEBUG: Inside ApplyDate (up2date)...\n";
+   print STDERR "DEBUG: Looking For: " . $SearchDate . "\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+    if ($ThisLine =~ m/\[$SearchDate\]/o) {
+      print $ThisLine;
+    }
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

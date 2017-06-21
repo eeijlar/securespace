@@ -1,0 +1,42 @@
+##########################################################################
+# $Id: eximstats,v 1.1 2006/02/22 19:23:43 mike Exp $
+##########################################################################
+# This is a wrapper for the eximstats program
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to jeff.frost@frostconsultingllc.com and
+#    logwatch-devel@logwatch.org
+########################################################
+
+use Logwatch ':all';
+
+$Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+
+my $SearchDate = TimeFilter("%Y-%m-%d %H:%M:%S");
+
+if ( $Debug >= 5 ) {
+         print STDERR "\n\nDEBUG: Inside eximstats Filter \n\n";
+         $DebugCounter = 1;
+}
+
+open(EXIMSTATS,"| $ENV{'eximstats'}");
+
+while (defined($ThisLine = <STDIN>)) {
+
+    next unless $ThisLine =~ /^$SearchDate /o;
+
+    if ( $Debug >= 5 ) {
+       print STDERR "DEBUG($DebugCounter): $ThisLine";
+       $DebugCounter++;
+    }
+    print EXIMSTATS $ThisLine;
+}
+
+close EXIMSTATS;
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

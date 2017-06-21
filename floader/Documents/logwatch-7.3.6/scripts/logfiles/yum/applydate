@@ -1,0 +1,30 @@
+##########################################################################
+# $Id: applydate,v 1.3 2007/04/28 22:35:04 bjorn Exp $
+##########################################################################
+
+use POSIX qw(strftime);
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+my $time = time;
+
+# Two formats in use: SearchNewDate is for yum 2.1 and later, I believe
+$SearchDate = TimeFilter('%m/%d/%y %H:%M:%S');
+$SearchNewDate = TimeFilter('%b %d %H:%M:%S');
+
+if ( $Debug > 5 ) {
+   print STDERR "DEBUG: Inside ApplyDate (yum)...\n";
+   print STDERR "DEBUG: Looking For: " . $SearchDate . " or " . $SearchNewDate . "\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+    # Here we actually remove the dates, as well
+    if ($ThisLine =~ s/^$SearchNewDate //o ||
+        $ThisLine =~ s/$SearchDate //o) {
+      print $ThisLine;
+    }
+}
+
+
+

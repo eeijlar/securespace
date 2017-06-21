@@ -1,0 +1,80 @@
+###########################################################################
+# $Id: sudo,v 1.11 2006/04/12 23:17:09 bjorn Exp $
+###########################################################################
+# $Log: sudo,v $
+# Revision 1.11  2006/04/12 23:17:09  bjorn
+# Added %OtherList, and handles some errors.
+#
+###########################################################################
+
+###########################################################################
+# sudo: A logwatch script to collate and format sudo log entries from
+#       the secure log. Entries are broken down by the user who issued
+#       the command, and further by the effective user of the command.
+#
+#       Detail Levels:
+#        0: Just print the command
+#       20: Include the current directory when the command was executed
+#           (on a separate line)
+#       30: Include the TTY on the directory line
+###########################################################################
+
+use strict;
+my %OtherList;
+
+my ($Debug,  $Detail,  %byUser, %byUserSum);
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+my $Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+# maximum number of commands user ran to display at low detail
+my $CmdsThresh = $ENV{'command_run_threshold'} || 0;
+
+my ($user, $error, $tty, $dir, $euser, $cmd, $args);
+
+while (defined(my $ThisLine = <STDIN>)) {
+   if ( ($user, $error, $tty, $dir, $euser, $cmd, $args) = $ThisLine =~ m/^\s*(\w+) : (.*; )?TTY=(\S+) ; PWD=(.*?) ; USER=(\S+) ; COMMAND=(\S+)( ?.*)/) {
+      push @{$byUser{$user}{$euser}}, [$error . $cmd,$args, $dir, $tty];
+      $byUserSum{$user}{$euser}{$cmd} += 1;
+   } elsif ( ($user,$euser) = $ThisLine =~ /^\s*(\w+) : no passwd entry for (\w+)\!$/) {
+      push @{$byUser{$user}{$euser . " (No such user)"}}, ["No password entry"];
+   } else {
+   chomp($ThisLine);
+   $OtherList{$ThisLine}++;
+   }
+}
+
+foreach my $user (sort keys %byUser) {
+   print "\n" . "=" x 78 . "\n";
+   foreach my $euser (sort keys %{$byUser{$user}}) {
+      print "\n$user => $euser\n", "-" x length("$user => $euser"), "\n";
+      foreach my $cmd (sort keys %{$byUserSum{$user}{$euser}}) {
+         if ($Detail < 10 && $CmdsThresh <= $byUserSum{$user}{$euser}{$cmd}) {
+            print "$cmd - $byUserSum{$user}{$euser}{$cmd} Times.\n";
+          } # if $Detail < 10
+      } # foreach $gcmd
+      foreach my $row (@{$byUser{$user}{$euser}}) {
+         if ($Detail >= 10 || $CmdsThresh > $byUserSum{$user}{$euser}{$$row[0]}) {
+            my ($gcmd,$args, $dir, $tty) = @$row;
+            my $cmd = "$gcmd$args";
+            # make long commands easier to read
+            $cmd =~ s/(?=.{74,})(.{1,74}) /${1} \\\n    /g if (length($cmd) > 75);
+            print "$cmd\n";
+            if ($Detail >= 20) {
+               my $ttydetail = "";
+               $ttydetail = "($tty) " if $Detail >= 30;
+               print "\t$ttydetail$dir\n";
+            } # if $Detail >= 20
+         } # if $Detail >= 10
+      } # foreach $row
+   } # foreach $euser
+} # foreach $user
+
+
+if (keys %OtherList) {
+   print "\n\n**Unmatched Entries**";
+   foreach my $line (sort {$OtherList{$b}<=>$OtherList{$a} } keys %OtherList) {
+      print "\n   $line: $OtherList{$line} Time(s)";
+   }
+}
+
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

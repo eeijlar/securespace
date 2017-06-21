@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PROG=scripts/logwatch.pl
+TMP=project/tmp/fix_path.tmp
+
+cp $PROG $TMP
+
+sed \
+   -e 's/^\(my \$BaseDir = .*kirk.*\)$/#\1/' \
+   -e 's/^#\(my \$BaseDir = "\/etc\/log\.d";\)$/\1/' \
+   $TMP > $PROG

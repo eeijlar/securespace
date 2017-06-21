@@ -1,0 +1,279 @@
+Version 7.3.5 -> 7.3.6 [stable]:
+  [May 19, 2007]
+- Fixed bug with --mailto not working with printing now enabled by default
+- Fixed problem with the Samba filter
+
+Version 7.3.4 -> 7.3.5 [stable]:
+- New services bfd, zz-runtime, evtsystem, evtsecurity, and evtapplication.
+- Default behavior is now to print output which means you will see the
+  report if you run it from the command-line and when run from cron it will
+  be emailed to you by the cron daemon.  You can change this through config
+  or command-line options.
+  
+Version 7.3.3 -> 7.3.4 [stable]:
+- Fixed problems with 7.3.3 release
+  
+Version 7.3.2 -> 7.3.3 [stable]:
+- Substantial Postfix improvements and other minor changes and fixes
+  
+Version 7.3.1 -> 7.3.2 [stable]:
+- Better FC5 support (fixed bug with subdirectories under log directories)
+- Numerous other filter improvements
+- Added dpkg, pix, denyhosts, and php services
+  
+Version 7.3.5 -> 7.3.1 [stable]:
+- Numerous patches applied by Bjorn L and contributed by many, thanks!
+  
+Version 7.2 -> 7.2.1 [stable]:
+- Fixed missing HTML files in RPM
+  
+Version pre7.2 -> 7.2 [stable]:
+- html/encode code from Mike
+- Other misc bug fixes, enhancements, patches
+  
+Version 7.0 -> pre7.1 [beta]:
+- Custom local service filter scripts now supported.
+- Expanded duplicate detection of configuration
+  parameters.
+- Brought documentation up-to-date to reflect the
+  compliance with Filesystem Hierarchy Standard of
+  version 7.0, as well as the above two changes.
+  The logWatch man page, the README, and
+  HOWTO-Customize-LogWatch have been updated.
+  HOWTO-Make-Filter and HOWTO-Customize-Configuration
+  are no longer applicable.
+- New install_logwatch.sh script for those installing
+  directly from tar file (not installing with RPM).
+- New dnssec service filter.
+  
+Version pre7.0 -> 7.0 [stable]:
+  [unknown]
+- Final release with the new /etc/logwatch directory structure
+  
+Version 6.1.2 -> pre7.0 [beta]:
+  [unknown]
+- Numerous changes, most notably a whole new directory structure.
+  
+Version 6.1.1 -> 6.1.2 [stable]:
+  [unknown]
+- Fixed lock-up problem in http filter when using perl 5.6
+- Small improvements to clamav filter
+  
+Version 6.1 -> 6.1.1 [stable]:
+  [unknown]
+- More cleanup and more application of community patches.  Thanks everybody,
+  especially Bjorn and Mike!
+- More cleanup and more application of community patches.  Thanks everybody,
+  especilaly Bjorn!
+  
+Version pre6.1 -> 6.1 [stable]:
+  [unknown]
+- More cleanup and more application of community patches.  Thanks everybody,
+  especilaly Bjorn!
+  
+Version 6.0.2 -> pre6.1 [beta]:
+  [unknown]
+- More changes by Bjorn
+- New services added: audit, sonicwall, and zz-network (must be enabled in logwatch.conf to make it active)
+- Added --numeric to inhibit certain DNS lookups
+- Significant improvements for the --range option (run --range help for info)
+- This release is courtesy of Bjorn
+  
+Version 6.0.1 -> 6.0.2 [stable]:
+  [unknown]
+- Build containing numerous bug fixes applied by Bjorn
+  
+Version 6.0 -> 6.0.1 [stable]:
+  [unknown]
+- Just applied a few small cleanup changes
+  
+Version pre6.0 -> 6.0 [stable]:
+  [unknown]
+- More consolidated patches from Mike Tremaine for final 6.0 release
+  
+Version 5.2.2 -> pre6.0 [beta]:
+  [unknown]
+- Once again, added consolidated patches from Mike Tremaine <mgt@stellarcore.net>, since I can't seem to get them done!
+- Added filters for extreme-networks, saslauthd, and xntpd
+- Added tons of changes from a ton of people that Mike Tremaine <mgt@stellarcore.net>
+  put together for me.
+- Added openvpn and netscreen filters
+- New HTML output
+- Better multi-platform support
+- Lots of other changes I'm sure that I missed
+  
+Version 5.2.1 -> 5.2.2 [stable]:
+  [unknown]
+- Added more patches from blues@ds.pg.gda.pl
+  
+Version 5.2 -> 5.2.1 [stable]:
+  [unknown]
+- Few minor bug fixes from 5.2
+  
+Version 5.1 -> 5.2 [stable]:
+  [unknown]
+- Added check for large user mailboxes
+- Added pop3 and imapd filters
+- Updated clamav support
+- New cisco log filter
+- Tons of updates to existing filters (too many to list!)
+  
+Version pre5.1 -> 5.1 [stable]:
+  [unknown]
+- More solaris support and filter enhancements
+  
+Version 5.0 -> pre5.1 [beta]:
+  [unknown]
+- More Solaris support
+- Tons of filter enhancements sent in by users
+- Added filters for shaperd, oidentd, and mailscanner (Solaris)
+- Tons of patches and new options of --splithosts and --multiemail
+- Added Yum and Clam-update filters
+- Couple of patches from blues@ds.pg.gda.pl
+  
+Version 4.3.2 -> pre5.0 [beta]:
+  [unknown]
+- Main script: couple of security fixes and many bug fixes
+- Basic Solaris support
+- Now there is a Logwatch.pm that the filters can use common code from
+- Improvements to numerous filters, especially sendmail
+- Added new filters; amavis, clamav-milter, courier, http, postfix, pound, pureftpd, vsftpd
+  
+Version 4.3.1 -> 4.3.2 [stable]:
+  [unknown]
+- Just applied numerous minor patches (most of them from Jim O'Halloran)
+  
+Version 4.3 -> 4.3.1 [stable]:
+  [unknown]
+- Fixed an error in the ftpd-messages script that I somehow missed
+  
+Version 4.2.1 -> 4.3 [stable]:
+  [unknown]
+- Numerous minor bug fixes and enhancements
+- Added RAID and drive failure notification
+- Added smartd service filter
+  
+Version pre4.3 -> 4.2.1 [stable]:
+  [unknown]
+- Fixed missing autorpm filter components
+  
+Version 4.1 -> 4.2 [stable]:
+  [unknown]
+- More improvments in the kernel script
+- Added support for AutoRPM log processing
+  
+Version 4.0.1 -> 4.1 [stable]:
+  [unknown]
+- Fixed IP lookup bug in kernel script
+- Sendmail improvements sent in from Alex K <Alex@wtwf.com>
+- Just some more cleanup as I wanted to get a new stable release out there
+- Fixed Perl warning in Pluto filter
+- applied some changes from Eric Gerbier <eric.gerbier@meteo.fr> for proftpd filter
+- Fixed formatting of Pluto filter
+- Removed use of /bin/date from all scripts (thanks Mark D. Nagel <mnagel@willingminds.com>)
+- Added afpd service filter
+  
+Version 4.0 -> 4.0.1 [stable]:
+  [unknown]
+- Had to undo the foreign-language fixed in applystddate for sh-utils 2.0.12
+- Had to take the 'require 5.6.0' line out of sudo filter as Perl 5.8 complains
+  
+Version 3.3 -> pre4.0 [beta]:
+  [unknown]
+- Exim script will no longer cause errors if modules don't exist
+- Reworked the method of processing shared scripts
+- Added patches from RHL8.0 distribution of logwatch
+- Fixed all current Red Hat Bugzilla issues
+  (bugs 68243 73487 75086 68805 69605 68807 68862 72809)
+- Applied some wu-ftpd patches submitted by Jay Berkenbilt
+- Now Logwatch places service delimiters in the output file and service filters no longer need to
+- Double-quotes can be used to preserve case in configuration file values
+- General code cleanup
+- Can now process logs only from a specified host
+- Added a stunnel filter and new Pluto filter
+- Added ability to remove services by using '-servicename' in logwatch.conf
+- Fixed bug when using Perl 5.8
+- Added much better iptables support
+- Numerous other bug fixes
+  
+Version 3.2 -> 3.3 [stable]:
+  [unknown]
+- Fixes in iptables and sendmail parsing
+- Some Solaris compatibility changes
+- Added arpwatch filter
+  
+Version 3.1 -> pre3.2 [beta]:
+  [unknown]
+- Added basic iptables support
+- Added --logdir and --hostname command-line options
+- Numerous other bug fixes
+  
+Version pre3.1 -> 3.1 [stable]:
+  [unknown]
+- Fixed possible hanging problem in samba applydate
+- Fixed bug with cron filter not reporting any activity
+- Added ipop3d, portsentry, qmail and vpopmail contributed filters
+  
+Version 3.0 -> pre3.1 [beta]:
+  [unknown]
+- Samba filter actually works to some degree
+  
+Version pre3.0 -> 3.0 [stable]:
+  [unknown]
+- Hopefully now properly included the up2date filter!
+- Added simple/minimal dhcpd filter
+- Fixed fortune module so it works again
+  
+Version 2.9 -> pre3.0 [beta]:
+  [unknown]
+- Updated cron filter to handle newer cron daemons
+- Fixed up2date filter
+- Actually properly included the up2date filter
+- Added pam_unix filter
+  
+Version 2.8.5 -> 2.9 [stable]:
+  [unknown]
+- Cleaned up named, sshd, secure, and proftpd filters
+- Added Exim, up2date, and sudo filters
+  
+Version 2.8.2 -> 2.8.5 [stable]:
+  [unknown]
+- Added filter for syslog entries from the NetGear rt314 router(by Daniel J. Barrett <dbarrett@blazemonger.com>)
+- Added an enhanced sendmail filter that also handles messages from the blackhole SPAM filter
+- Logwatch will now bypass any empty logfiles
+  
+Version 2.8.1 -> 2.8.2 [stable]:
+  [unknown]
+- Fixed bad pluto filter in last release
+  
+Version 2.8 -> 2.8.1 [stable]:
+  [unknown]
+- Added mktemp warning about -d switch if it fails
+- Added Pluto filter
+- Fixed bug with xferlog date processing
+- Removed some unmatched entries for pro-ftpd
+  
+Version 2.7 -> 2.8 [stable]:
+  [unknown]
+- Added in.qpopper filter
+- Added some more error checking
+- Cleaned up the cron and ftp filters
+  
+Version 2.6 -> 2.7 [stable]:
+  [unknown]
+- Supports multiple copies of the same command (such as *remove) in config files
+- No longer requires an = sign when no arguments are given
+- Added some more filtering
+- Added a $summarize_connections variable for the "secure" service
+  
+Version 2.5 -> 2.6 [stable]:
+  [unknown]
+- Now uses mktemp if available
+- Added some filters that were missing from the 2.5 release
+  
+Version 2.1.1 -> 2.5 [stable]:
+  [unknown]
+- Implemented several bug fixes and patches that have been sent in
+- Fixed a possible root exploit using a race condition in /tmp
+- Fixed bugs 46371, 56191, 58578, 61202, 61829, 61831, 61832 from bugzilla.redhat.com
+  

@@ -1,0 +1,31 @@
+
+use strict;
+##########################################################################
+# $Id: onlyhost,v 1.8 2005/04/20 22:26:37 bjorn Exp $
+##########################################################################
+
+# This feature concieved by mark@winksmith.com
+
+my $hostname = $ENV{'LOGWATCH_ONLY_HOSTNAME'};
+
+if (($ENV{'LOGWATCH_DEBUG'} > 5) and $hostname) {
+   print STDERR "DEBUG: Inside OnlyHostname for $hostname\n";
+}
+
+#If called from a service config file it passes the param as an ARG
+if (length($ARGV[0])) {      #put in or override the host id
+        $hostname = $ARGV[0];
+}
+
+my $line;
+while (defined($line = <STDIN>)) {
+   if ($hostname) {
+      if ($line =~ m/^... .. ..:..:.. $hostname\b/io) {
+         print $line;
+      }
+   } else {
+      print $line;
+   }
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

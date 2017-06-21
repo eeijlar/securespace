@@ -1,0 +1,60 @@
+
+##########################################################################
+# $Id: init,v 1.14 2006/12/20 15:25:09 bjorn Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+########################################################
+
+$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+   if (( $ThisLine =~ /open\(.*\): No such file or directory/)  or 
+      ( $ThisLine =~ /Id "r" respawning too fast: disabled for 5 minutes/) or 
+      ( $ThisLine =~ /Re-reading inittab/)) {
+      # We don't care about these     
+   }
+   elsif ( $ThisLine =~ s/Switching to runlevel: (.)\s*$/$1/ ) {
+      # Which runlevel did we change to?
+      chomp ($ThisLine);
+      $RunLevel{$ThisLine}++;
+   }
+   elsif ( $ThisLine =~ s/^Entering runlevel: (.)\s*$/$1/ ) {
+      # Which runlevel did we enter?
+      chomp ($ThisLine);
+      $RunLevel{$ThisLine}++;
+   }
+   elsif ( $ThisLine =~ s/^Trying to re-exec init// ) {
+	   # Look for telinit executions
+	   chomp ($ThisLine);
+	   $ReExecInit++;
+   }
+   else {
+      # report any unmatched entries
+      push @OtherList,$ThisLine;
+   }
+}
+
+if ((keys %RunLevel) and ($Detail >= 10)) {
+   foreach $Level (sort keys %RunLevel) {
+      print "   Entered or switched to runlevel " . $Level . ": " . $RunLevel{$Level} . " Time(s)\n";
+   }
+}
+if ($ReExecInit) {
+	print "\n\nRe-execs of init: $ReExecInit times\n";
+}
+
+if ($#OtherList >= 0) {
+   print "\n**Unmatched Entries**\n";
+   print @OtherList;
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

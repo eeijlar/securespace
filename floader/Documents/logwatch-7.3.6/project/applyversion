@@ -1,0 +1,3 @@
+=scripts/logwatch.pl
+s/^my\s+\$Version\s*=\s*'.*'/my \$Version = '__VERSION__'/
+s/^my\s+\$VDate\s*=\s*'.*'/my \$VDate = '__SHORTDATE__'/

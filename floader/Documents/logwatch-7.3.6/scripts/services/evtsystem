@@ -1,0 +1,58 @@
+##########################################################################
+# $Id: evtsystem,v 1.1 2007/04/28 22:50:24 bjorn Exp $
+##########################################################################
+# $Log: evtsystem,v $
+# Revision 1.1  2007/04/28 22:50:24  bjorn
+# Added files for Windows Event Log, by Orion Poplawski.  These are for
+# Windows events logged to a server, using Snare Agent or similar.
+#
+##########################################################################
+my $Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+while (defined($ThisLine = <STDIN>)) {
+   #Parse
+   my ($Hostname,$Criticality,$SourceName,$DateTime,$EventID,$System,$UserName,$SIDType,$EventLogType,$ComputerName,$CategoryString,$DataString,$ExpandedString,$Extra) =
+      ($ThisLine =~ /(\w+)\sMSWinEventLog\t(\d+)\t(\w+)\t\d+\t([^\t]+)\t(\d+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t?([^\t]*)\t?([^\t]*)\t?([^\t]*)\t?([^\t]*)/);
+   if (!defined($Hostname)) {
+      print STDERR "Cannot parse $ThisLine";
+      next;
+   }
+   #print STDERR "ExpandedString = $ExpandedString\n";
+
+   if ($System =~ /Application Popup/) {
+      #Ignore these
+      next if $ExpandedString =~ /Initialization Failed : The application failed to initialize because the window station is shutting down/;
+   }
+
+   if ($System =~ /EventLog/) {
+      #Ignore these
+      next if $ExpandedString =~ /Microsoft \(R\) Windows \(R\) \d+\.\d+\. \d+ Service Pack \d/;
+      next if $ExpandedString =~ /The Event log service was started./;
+      next if $ExpandedString =~ /The Event log service was stopped./;
+   }
+
+   if ($System =~ /Service Control Manager/) {
+      #Ignore these
+      next if $ExpandedString =~ /The (.*) service entered the running state./;
+      next if $ExpandedString =~ /The (.*) service entered the stopped state./;
+      next if $ExpandedString =~ /The (.*) service was successfully sent a start control./;
+      next if $ExpandedString =~ /The (.*) service was successfully sent a stop control./;
+   }
+
+   # Add to the list
+   $Systems{$System}->{"$Hostname $ExpandedString"}++;
+}
+
+if (keys %Systems) {
+   foreach $System (sort(keys %Systems)) {
+      print "\n$System\n";
+      foreach $Error (sort(keys %{$Systems{$System}})) {
+         print "    $Error : $Systems{$System}->{$Error} Times\n";
+      }
+   }
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

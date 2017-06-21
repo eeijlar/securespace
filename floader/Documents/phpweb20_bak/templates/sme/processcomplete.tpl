@@ -1,0 +1,15 @@
+{include file='login_header.tpl'}
+{include file='mail.tpl'}
+    <div id="outlineBorder">
+	<div id="regSpacer"></div>
+    <p id="margin">
+         Your request to {$action|escape} {$name|escape} has been processed successfully.<br>
+         {if $action eq 'accept'}
+         	Your client should now have received an e-mail with their digital certificate attached.<br>
+         	They should also have received a text message with their digital certificate password.
+         {else}
+         	
+         {/if}          
+    </p>
+    </div>
+{include file='footer.tpl'}

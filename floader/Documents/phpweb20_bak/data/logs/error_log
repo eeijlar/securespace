@@ -1,0 +1,232 @@
+[Tue Dec 09 09:59:23 2008] [error] [client 62.17.151.33] access to /var/www/phpweb20/htdocs/account failed, reason: SSL requirement expression not fulfilled (see SSL logfile for more details), referer: https://www.securecounselling.ie/
+[Fri Dec 12 10:38:51 2008] [error] [client 92.48.119.29] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Dec 12 10:38:51 2008] [error] [client 92.48.119.29] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Dec 12 12:31:03 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 12 12:31:03 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 12 12:31:03 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 12 13:23:41 2008] [error] Re-negotiation handshake failed: Not accepted by client!?
+[Sat Dec 13 00:48:59 2008] [error] [client 131.109.225.156] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sat Dec 13 00:48:59 2008] [error] [client 131.109.225.156] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Tue Dec 16 09:58:41 2008] [error] [client 83.15.170.43] request failed: URI too long (longer than 8190)
+[Tue Dec 16 22:09:06 2008] [error] [client 211.95.78.70] script not found or unable to stat: /srv/www/cgi-bin/textenv.pl
+[Tue Dec 16 22:09:06 2008] [error] [client 211.95.78.70] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:06 2008] [error] [client 211.95.78.70] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:07 2008] [error] [client 211.95.78.70] script not found or unable to stat: /srv/www/cgi-bin/textenv.pl
+[Tue Dec 16 22:09:07 2008] [error] [client 211.95.78.70] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:07 2008] [error] [client 211.95.78.70] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:08 2008] [error] [client 211.95.78.70] script not found or unable to stat: /srv/www/cgi-bin/textenv.pl
+[Tue Dec 16 22:09:08 2008] [error] [client 211.95.78.70] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:08 2008] [error] [client 211.95.78.70] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:09 2008] [error] [client 211.95.78.70] script not found or unable to stat: /srv/www/cgi-bin/textenv.pl
+[Tue Dec 16 22:09:09 2008] [error] [client 211.95.78.70] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Tue Dec 16 22:09:09 2008] [error] [client 211.95.78.70] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_NOT_FOUND.html.var
+[Wed Dec 17 10:47:10 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 10:47:10 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 10:47:10 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 10:47:11 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 10:47:11 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 10:47:11 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 10:47:12 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 10:47:12 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 10:47:12 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:10 2008] [error] Re-negotiation handshake failed: Not accepted by client!?
+[Wed Dec 17 15:01:10 2008] [error] [client 84.51.241.8] access to /var/www/phpweb20/htdocs/account failed, reason: SSL requirement expression not fulfilled (see SSL logfile for more details), referer: https://www.securecounselling.ie/
+[Wed Dec 17 15:01:53 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 15:01:53 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:53 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:54 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 15:01:54 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:54 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:55 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Dec 17 15:01:55 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Dec 17 15:01:55 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Thu Dec 18 11:23:23 2008] [error] Re-negotiation handshake failed: Not accepted by client!?
+[Thu Dec 18 11:23:34 2008] [error] [client 84.203.232.66] access to /var/www/phpweb20/htdocs/account failed, reason: SSL requirement expression not fulfilled (see SSL logfile for more details)
+[Fri Dec 19 01:05:55 2008] [error] [client 87.237.211.191] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Dec 19 01:05:55 2008] [error] [client 87.237.211.191] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:35 2008] [error] [client 66.98.138.68] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:39 2008] [error] server reached MaxClients setting, consider raising the MaxClients setting
+[Fri Dec 19 13:06:39 2008] [error] [client 66.98.138.68] Invalid URI in request GET  HTTP/1.1
+[Fri Dec 19 13:06:39 2008] [error] [client 66.98.138.68] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:39 2008] [error] [client 66.98.138.68] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:40 2008] [error] [client 66.98.138.68] Invalid URI in request GET  HTTP/1.1
+[Fri Dec 19 13:06:40 2008] [error] [client 66.98.138.68] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:40 2008] [error] [client 66.98.138.68] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Fri Dec 19 13:06:40 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 13:06:40 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:40 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:41 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 13:06:41 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:41 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:42 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 13:06:42 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:42 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:43 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 13:06:43 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:43 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:44 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 13:06:44 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 13:06:44 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:55 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 16:20:55 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:55 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:56 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 16:20:56 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:56 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:57 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Fri Dec 19 16:20:58 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Fri Dec 19 16:20:58 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:31 2008] [error] [client 201.116.17.162] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:36 2008] [error] [client 201.116.17.162] Invalid URI in request GET  HTTP/1.1
+[Sat Dec 27 11:50:36 2008] [error] [client 201.116.17.162] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:36 2008] [error] [client 201.116.17.162] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:38 2008] [error] [client 201.116.17.162] Invalid URI in request GET  HTTP/1.1
+[Sat Dec 27 11:50:38 2008] [error] [client 201.116.17.162] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:38 2008] [error] [client 201.116.17.162] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sat Dec 27 11:50:38 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sat Dec 27 11:50:38 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sat Dec 27 11:50:38 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sat Dec 27 11:50:39 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sat Dec 27 11:50:39 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sat Dec 27 11:50:39 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:08 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 00:03:08 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:08 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:09 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 00:03:09 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:09 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:10 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 00:03:10 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:10 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:11 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 00:03:11 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:11 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:12 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 00:03:12 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 00:03:12 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 18:15:13 2008] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Dec 30 18:15:13 2008] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Dec 30 18:15:13 2008] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 00:33:06 2009] [error] [client 87.118.118.174] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.test0:)
+[Sun Jan 04 00:33:06 2009] [error] [client 87.118.118.174] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.test0:)
+[Sun Jan 04 09:07:58 2009] [error] [client 91.202.8.38] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 09:07:58 2009] [error] [client 91.202.8.38] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 09:07:58 2009] [error] [client 91.202.8.38] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 04 09:07:58 2009] [error] [client 91.202.8.38] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 09:07:58 2009] [error] [client 91.202.8.38] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 04 10:39:13 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 10:39:13 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 10:39:13 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 10:39:18 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 10:39:18 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 10:39:18 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 10:39:19 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 10:39:19 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 10:39:19 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 12:01:41 2009] [error] [client 91.202.8.38] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 04 12:01:41 2009] [error] [client 91.202.8.38] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 04 14:21:12 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 14:21:12 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:12 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:13 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 14:21:13 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:13 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:14 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 14:21:14 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:14 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:15 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 14:21:16 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Sun Jan 04 14:21:16 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:16 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:16 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Sun Jan 04 14:21:16 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:03 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Mon Jan 05 13:01:03 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:03 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:04 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Mon Jan 05 13:01:04 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:04 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:05 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Mon Jan 05 13:01:05 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:05 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:06 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Mon Jan 05 13:01:06 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:06 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:07 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Mon Jan 05 13:01:07 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Mon Jan 05 13:01:07 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:56 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 07 09:44:56 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:56 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:57 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 07 09:44:57 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:57 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:58 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 07 09:44:58 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:58 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:59 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 07 09:44:59 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:44:59 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:45:00 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 07 09:45:00 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 09:45:00 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 07 12:45:29 2009] [error] [client 75.14.245.201] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Wed Jan 07 12:45:38 2009] [error] [client 75.14.245.201] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Jan 09 17:52:16 2009] [error] [client 158.43.188.165] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Fri Jan 09 17:52:16 2009] [error] [client 158.43.188.165] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Sun Jan 11 14:29:51 2009] [error] [client 72.252.209.134] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Tue Jan 13 16:19:26 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Jan 13 16:19:27 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 16:19:27 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 16:19:27 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Jan 13 16:19:27 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 16:19:27 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 16:19:28 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Tue Jan 13 16:19:28 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 16:19:28 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] Invalid URI in request GET HTTP/1.1 HTTP/1.1
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Tue Jan 13 22:03:18 2009] [error] [client 122.128.96.5] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_BAD_REQUEST.html.var
+[Wed Jan 14 21:14:39 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 21:14:42 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 21:14:42 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:15 2009] [error] Re-negotiation handshake failed: Not accepted by client!?
+[Wed Jan 14 23:35:15 2009] [error] [client 84.203.38.90] access to /var/www/phpweb20/htdocs/account failed, reason: SSL requirement expression not fulfilled (see SSL logfile for more details)
+[Wed Jan 14 23:35:36 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:35:37 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:37 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:37 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:35:37 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:37 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:38 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:35:38 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:35:38 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:07 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:36:07 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:07 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:08 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:36:08 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:08 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:09 2009] [error] [client 127.0.0.1] Directory index forbidden by Options directive: /var/www/phpweb20/
+[Wed Jan 14 23:36:10 2009] [error] [client 127.0.0.1] unable to include potential exec "include/top.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Wed Jan 14 23:36:10 2009] [error] [client 127.0.0.1] unable to include potential exec "include/bottom.html" in parsed file /usr/share/apache2/error/HTTP_FORBIDDEN.html.var
+[Thu Jan 15 15:54:54 2009] [error] [client 80.93.230.82] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)
+[Thu Jan 15 15:54:54 2009] [error] [client 80.93.230.82] client sent HTTP/1.1 request without hostname (see RFC2616 section 14.23): /w00tw00t.at.ISC.SANS.DFind:)

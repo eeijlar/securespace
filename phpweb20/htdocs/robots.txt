@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /css/
+Disallow: /CVS/
+Disallow: /images/
+Disallow: /js/
+Disallow: /account/
+Disallow: /mail/
+Disallow: /payments/
+Disallow: /admin/
+Disallow: /profile/

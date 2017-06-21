@@ -1,0 +1,21 @@
+##########################################################################
+# $Id: zz-fortune,v 1.13 2006/01/16 20:41:44 bjorn Exp $
+##########################################################################
+# Named 'zz-fortune' so that it will be the last to execute...
+
+my $env = ( $ENV{'REAL_LANG'} ? "LANG=".$ENV{'REAL_LANG'}." " : "" ).
+      ( $ENV{'REAL_LC_ALL'} ? "LC_ALL=".$ENV{'REAL_LC_ALL'}." " : "" );
+
+if (($ENV{'PRINTING'} eq "y" ) && (-f "/usr/games/fortune")) {
+      #print "\n\n------------------ Fortune --------------------\n\n";
+      system("$env /usr/games/fortune");
+      print "\n";
+}
+elsif (($ENV{'PRINTING'} eq "y" ) && (-f "/usr/bin/fortune")) {
+      #print "\n\n------------------ Fortune --------------------\n\n";
+      system("$env /usr/bin/fortune");
+      print "\n";
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

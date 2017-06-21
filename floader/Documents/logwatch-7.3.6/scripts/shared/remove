@@ -1,0 +1,19 @@
+##########################################################################
+# $Id: remove,v 1.12 2005/05/25 22:33:15 bjorn Exp $
+##########################################################################
+
+########################################################
+# This was written and is maintained by:
+#    Kirk Bauer <kirk@kaybee.org>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to kirk@kaybee.org.
+#
+########################################################
+
+# Just a case-insensitive, inverse egrep
+
+#/bin/egrep -vi "$@"
+system("egrep -vi \"@ARGV\"");
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

@@ -1,0 +1,36 @@
+%defattr(-,root,root)
+%doc README HOWTO-Customize-LogWatch
+%dir %{_var}/cache/logwatch
+%dir %{_sysconfdir}/logwatch
+%dir %{_sysconfdir}/logwatch/scripts
+%dir %{_sysconfdir}/logwatch/scripts/services
+%dir %{_sysconfdir}/logwatch/conf
+%dir %{_sysconfdir}/logwatch/conf/logfiles
+%dir %{_sysconfdir}/logwatch/conf/services
+%dir %{_datadir}/logwatch
+%dir %{_datadir}/logwatch/default.conf
+%dir %{_datadir}/logwatch/default.conf/services
+%dir %{_datadir}/logwatch/default.conf/logfiles
+%dir %{_datadir}/logwatch/default.conf/html
+%dir %{_datadir}/logwatch/dist.conf
+%dir %{_datadir}/logwatch/dist.conf/services
+%dir %{_datadir}/logwatch/dist.conf/logfiles
+%dir %{_datadir}/logwatch/scripts
+%dir %{_datadir}/logwatch/scripts/logfiles
+%dir %{_datadir}/logwatch/scripts/services
+%dir %{_datadir}/logwatch/scripts/shared
+%dir %{_datadir}/logwatch/scripts/logfiles/*
+%dir %{_datadir}/logwatch/lib
+%{_datadir}/logwatch/scripts/logwatch.pl
+%{_sbindir}/logwatch
+%{_datadir}/logwatch/scripts/shared/*
+%{_datadir}/logwatch/scripts/services/*
+%{_datadir}/logwatch/scripts/logfiles/*/*
+%{_datadir}/logwatch/lib/Logwatch.pm
+%{_datadir}/logwatch/default.conf/*.conf
+%{_datadir}/logwatch/default.conf/services/*.conf
+%{_datadir}/logwatch/default.conf/logfiles/*.conf
+%{_datadir}/logwatch/default.conf/html/*.html
+%{_sysconfdir}/cron.daily/0logwatch
+%doc %{_mandir}/man8/logwatch.8*
+%config(noreplace) %{_sysconfdir}/logwatch/conf/*.conf

@@ -1,0 +1,54 @@
+##########################################################################
+# $Id: windows,v 1.1 2006/03/22 17:46:22 bjorn Exp $
+##########################################################################
+# $Log: windows,v $
+# Revision 1.1  2006/03/22 17:46:22  bjorn
+# Initial commit.  Files submitted by William Roumier.
+#
+##########################################################################
+# This was written and is maintained by:
+#    William Roumier <w.roumier@hotmail.fr>
+#
+# Please send all comments, suggestions, bug reports,
+#    etc, to logwatch-devel@logwatch.org
+##########################################################################
+
+use Logwatch ':all';
+#$Detail = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
+
+my ($month,$day,$time,$host,$process,$conn,$msg);
+
+while (defined($ThisLine = <STDIN>)) {
+
+($month,$day,$time,$host,$process,$conn,$msg)=split(/ +/,$ThisLine,7);
+
+  if  ($ThisLine =~ /0x18/ )
+    {
+     $testline = $ThisLine;
+     chomp $testline;
+     @testfields = split(/ /,$testline);
+     $name=$testfields[14];
+     $domain=$testfields[22];
+     $fip=$testfields[33];
+     #print "DEBUG name=" . $name . "domain =" . $domain . "ip =" . $fip . "\n";
+     $LoginFail{$domain}{$name}{$fip}++;
+  }
+  else  {
+     # will code this later
+    }
+
+}
+if (keys %LoginFail) {
+  print "\n\tWindows failed Logins:\n";
+  foreach $LDomain (keys %LoginFail) {
+     print "\nDOMAIN:   " . $LDomain . ":\n";
+     foreach $LName (keys %{$LoginFail{$LDomain}}) {
+        print "\tName: " .$LName . "\n " ;
+             foreach $LFip (keys %{$LoginFail{$LDomain}{$LName}}) {
+            print  "\t\tFrom :" .LookupIP($LFip)."\t ". $LoginFail{$LDomain}{$LName}{$LFip} . " Time(s)\n";
+                 }
+      print "\n";}
+  }
+}
+
+exit(0);

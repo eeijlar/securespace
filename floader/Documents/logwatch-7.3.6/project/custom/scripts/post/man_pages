@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$RELTYPE" = 'stable' ] ; then
+   echo -n "Converting man pages to HTML... "
+   #man ./logwatch.8 | man2html -nodepage > /var/www/mason/html/projects/logwatch/tabs/docs/logwatch.8.html
+   man2html -r logwatch.8 > /var/www/mason/html/projects/logwatch/tabs/docs/logwatch.8.html
+   chmod a+r /var/www/mason/html/projects/logwatch/tabs/docs/*.html
+   echo "Done."
+fi

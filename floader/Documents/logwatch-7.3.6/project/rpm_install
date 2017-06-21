@@ -1,0 +1,45 @@
+install -m 0755 -d %{buildroot}%{_var}/cache/logwatch
+install -m 0755 -d %{buildroot}%{_sysconfdir}/logwatch/scripts
+install -m 0755 -d %{buildroot}%{_sysconfdir}/logwatch/scripts/services
+install -m 0755 -d %{buildroot}%{_sysconfdir}/logwatch/conf
+install -m 0755 -d %{buildroot}%{_sysconfdir}/logwatch/conf/logfiles
+install -m 0755 -d %{buildroot}%{_sysconfdir}/logwatch/conf/services
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/default.conf/logfiles
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/default.conf/services
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/default.conf/html
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/dist.conf/logfiles
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/dist.conf/services
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/scripts/services
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/scripts/shared
+install -m 0755 -d %{buildroot}%{_datadir}/logwatch/lib
+
+install -m 0755 scripts/logwatch.pl %{buildroot}%{_datadir}/logwatch/scripts/logwatch.pl
+for i in scripts/logfiles/* ; do
+   if [ $(ls $i | wc -l) -ne 0 ] ; then
+      install -m 0755 -d %{buildroot}%{_datadir}/logwatch/$i
+      install -m 0755 $i/* %{buildroot}%{_datadir}/logwatch/$i
+   fi
+done
+install -m 0755 scripts/services/* %{buildroot}%{_datadir}/logwatch/scripts/services
+install -m 0755 scripts/shared/* %{buildroot}%{_datadir}/logwatch/scripts/shared
+install -m 0755 lib/* %{buildroot}%{_datadir}/logwatch/lib
+
+install -m 0644 conf/*.conf %{buildroot}%{_datadir}/logwatch/default.conf
+install -m 0644 conf/logfiles/* %{buildroot}%{_datadir}/logwatch/default.conf/logfiles
+install -m 0644 conf/services/* %{buildroot}%{_datadir}/logwatch/default.conf/services
+install -m 0644 conf/html/* %{buildroot}%{_datadir}/logwatch/default.conf/html
+
+install -m 0755 -d %{buildroot}%{_mandir}/man8
+install -m 0644 logwatch.8 %{buildroot}%{_mandir}/man8
+
+rm -f   %{buildroot}%{_sysconfdir}/cron.daily/logwatch \
+   %{buildroot}%{_sbindir}/logwatch
+
+install -m 0755 -d %{buildroot}%{_sysconfdir}/cron.daily
+ln -s %{_datadir}/logwatch/scripts/logwatch.pl %{buildroot}%{_sysconfdir}/cron.daily/0logwatch
+install -m 0755 -d %{buildroot}%{_sbindir}
+ln -s %{_datadir}/logwatch/scripts/logwatch.pl %{buildroot}%{_sbindir}/logwatch
+
+echo "###### REGULAR EXPRESSIONS IN THIS FILE WILL BE TRIMMED FROM REPORT OUTPUT #####" > %{buildroot}%{_sysconfdir}/logwatch/conf/ignore.conf
+echo "# Local configuration options go here (defaults are in %{_datadir}/logwatch/default.conf/logwatch.conf)" > %{buildroot}%{_sysconfdir}/logwatch/conf/logwatch.conf
+echo "# Configuration overrides for specific logfiles/services may be placed here." > %{buildroot}%{_sysconfdir}/logwatch/conf/override.conf

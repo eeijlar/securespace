@@ -1,0 +1,1536 @@
+#!/usr/bin/perl
+##########################################################################
+# $Id: amavis,v 1.48 2007/05/16 04:27:17 mrc Exp $
+##########################################################################
+# $Log: amavis,v $
+# Revision 1.48  2007/05/16 04:27:17  mrc
+#  - Fixed problem setting SARules config variable; renamed Show_SARules
+#
+# Revision 1.47  2007/05/14 17:28:21  mrc
+#  - Forgot to update Version string
+#
+# Revision 1.46  2007/05/14 17:20:45  mrc
+#  - Support for running in standalone mode (independent of logwatch)
+#  - Minor changes to sync up with postfix-logwatch release
+#  - Capture MailZu quarantine release messages
+#  - Handle amavis' Hits lines that includes uncalculated boost scores
+#    (eg. 1.03-3.5)
+#  - The option --timing_percentiles was not being recognized, due to name
+#    change from --percentiles.  Both are recognized.
+#  - Ignore "The amavisd daemon is already running" messages
+#  - Reworked the Startup info section.  Only shows at detail 10 by default
+#  - Add Ham / Spam hits summary
+#  - Show Top N Spam/Ham SA rules hit
+#  - Minor SPAM/SPAM-TAG RE update
+#  - Show hit Bayesian buckets
+#  - Show hit SA tests
+#  - Show spam score percentiles.
+#  - More cleanup (refactor common code, replace most global variables with lexicals,
+#    lowercase non-global variable names, shorten variable names, etc.)
+#  - Minor RE adjustment for amavis 2.5.0
+#  - Report SA version when shown in INFO line (amavis 2.5.0)
+#  - Top N percent of Timings report is now configurable (amavis_Timings)
+#  - Display of startup info can be disabled (amavis_StartInfo)
+#  - Capture SMTP shutdown messages
+#  - Capture and report TEMPFAIL messages
+#  - Updated comments regarding IPv6 from Mark Martinec
+#
+# Revision 1.45  2007/03/27 01:09:48  mrc
+#  - Handle multiple viruses in list in Malware by Scanner
+#  - Handle multiple recipients in Release from quarantine
+#  - Swap From and To keys in Release from quarantine, to handle multiple recipients
+#  - add inc_unmatched subroutine for easier debug of unmatched lines
+#  - Fix problem in sort routine where IP addresses were being captured
+#    anywhere in an output line for comparison via pack 'C4' - only
+#    attempt IP comparison if an IP address is the start of an output line.
+#
+# Revision 1.44  2007/02/27 20:31:42  mrc
+#  - New section for Passed|Blocked UNCHECKED
+#  - Change summary output criteria to check for any non-zero Totals
+#
+# Revision 1.43  2007/02/17 18:43:39  mrc
+#  - Ensure no output occurs when nothing is captured
+#  - Sync up the shared routines with the postfix code
+#  - Made maximum report width configurable in amavis.conf
+#  - All lines in report now obey max report width
+#  - Warn about dccproc unable to open map error
+#
+# Revision 1.42  2007/02/16 06:21:20  mrc
+#  - Capture and summarize Bad Address Syntax message
+#    (in postfix, can occur when strict_rfc821_envelopes is not set)
+#  - Group similar BAD HEADER messages and remove From key
+#
+# Revision 1.41  2007/02/07 04:19:43  mrc
+#  - Update IPv6 RE to accept RFC 2821 IPv6-address-literal "IPv6:" prefix
+#  - Liberalize several REs to better capture policy bank names
+#  - Ignore lines:
+#      "OS_fingerprint:"
+#      "run_as_subprocess: child process... "
+#      "Sophie broken pipe ..."
+#      "penpals: (bonus|prev Subject:|this Subject:"
+#      "virus_scan: \(bad jpeg: Invalid marker segm len"
+#  - Ignore lines from upcoming 2.5.0 version:
+#      "adding SA score \S+ to existing"
+#      "Turning AV infection into a spam report:"
+#  - Correct bad syntax of "$#{@$aref}" with "$#$aref"
+#  - Enable "use strict" and declare global vars
+#  - Fixed Banned RE, which would fail to capture a banned filename
+#    that contained an right paren.
+#  - Thanks: Mark Martinec
+#
+# Revision 1.40  2007/02/02 18:41:09  mrc
+#  - Changed amavis timing report to display percentiles
+#    instead of mean.  Percentiles are user configurable.
+#  - Removed Min/Max columns, and replaced them instead
+#    by adding 0 and 100 percentiles to the default list.
+#  - Fix to allow multiple contination lines
+#  - Fixed issue with unmatched lines that contain a %
+#  - Minor updates for amavis 2.4.5 log messages changes
+#  - Capture and summarize panic messages
+#
+# Revision 1.39  2007/02/01 20:16:52  mrc
+# Removed inadvertent debug prints, and extra newline from timing reports.
+#
+# Revision 1.38  2007/02/01 19:58:50  mrc
+#  - Changed amavis timing report to display percentiles
+#    instead of mean.  Percentiles are user configurable.
+#    Suggested by: Mark Martinec
+#
+# Revision 1.37  2007/01/31 06:38:43  mrc
+#  - Provide amavis timing report (detail >= 5)
+#  - Correctly capture amavis log continuation lines
+#
+# Revision 1.36  2007/01/31 02:50:15  mrc
+# Updates by Mike Cappella (MrC)
+#  - Capture additional ClamAV warnings
+#  - Add amavis timing report (detail >= 5)
+#  - Add "To" key in Malware Blocked section
+#  - Lowercase "To" email addresses
+#
+# Revision 1.35  2007/01/27 20:29:21  mrc
+# More updates by Mike Cappella (MrC)
+#   - Use same tree-building and reporting code as postfix filter
+#   - Provide ability to configure per section maximum detail
+#   - Capture and summarize many more log lines
+#   - Add Malware by Scanner section
+#   - Pin important errors to top of report
+#   - Sort by hits, IP, and lexically
+#   - Handle IPv6 addresses
+#   - Requires updated amavis.conf file
+#   - Thanks: Harald Geiger, Geert Janssens, Leon Kolchinsky, Mark Richards
+#
+# Revision 1.34  2006/11/12 18:39:34  bjorn
+# Change by MrC:
+# - Catches more amavis continuation lines
+# - Reports on mail released from quarantine via "amavisd-release"
+# - Reports supplemental minor bad headers available in amavisd 2.4.4+
+# - Suppresses empty detail lines in generic doReport routine
+#
+# Revision 1.33  2006/10/16 22:19:05  mike
+# Amavis patch for protocols from Mike Cappella -mgt
+#
+# Revision 1.32  2006/07/06 00:25:00  bjorn
+# Additional filtering and counting, by Geert Janssens
+#
+# Revision 1.31  2006/06/29 16:02:05  bjorn
+# Corrected two previous log entries.
+#
+# Revision 1.30  2006/06/27 15:17:53  bjorn
+# Improved parsing and counting from Geert Janssens.
+#
+# Revision 1.29  2006/06/24 16:06:12  bjorn
+# Major rewrite from Mike Cappella.
+#
+# Revision 1.28  2006/05/26 18:32:50  bjorn
+# Additional regexp adjustment, by 'Who Knows'.
+#
+# Revision 1.27  2006/05/21 18:17:41  bjorn
+# Complies with recent amavis releases, by Who Knows.
+#
+# Revision 1.26  2006/04/02 17:26:52  kirk
+# fixed spelling error
+#
+# Revision 1.25  2006/01/29 23:52:53  bjorn
+# Print out virus names and sender, by Felix Schwarz.
+#
+# Revision 1.24  2005/12/07 19:15:56  bjorn
+# Detect and count timeouts, by 'Who Knows'.
+#
+# Revision 1.23  2005/11/30 05:34:10  bjorn
+# Corrected regexp with space, by Markus Lude.
+#
+# Revision 1.22  2005/11/22 18:34:32  bjorn
+# Recognize 'Passed' bad headers, by "Who Knows".
+#
+# Revision 1.21  2005/10/26 05:40:43  bjorn
+# Additional patches for amavisd-new, by Mike Cappella
+#
+##########################################################################
+# Major rewrite by:
+#    Mike "MrC" Cappella <lists-logwatch@cappella.us>
+#
+# Please send all comments, suggestions, bug reports to the logwatch
+# mailing list (logwatch@logwatch.org), or to the email address above.
+# I will respond as quickly as possible. [MrC]
+#
+#
+# This was originally written by:
+#    Jim O'Halloran <jim@kendle.com.au>
+##########################################################################
+
+use warnings;
+no warnings "uninitialized";
+use strict;
+
+use Getopt::Long;
+use File::Basename;
+
+my $Version = "1.48.1";
+my $progname =  fileparse($0);
+my $progname_prefix = 'amavis';
+
+my %Opts = ();
+
+# Comamnd line options : config file variable
+$Opts{'detail'}                 = 10;      # report level detail
+$Opts{'max_report_width'}       = 100;     # maximum line width for report output    : amavis_max_report_width
+$Opts{'timing_percentiles'}     =          # percentiles shown in timing report      : amavis_timing_percentiles
+                                  "0 10 25 50 75 90 100";
+$Opts{'spam_score_percentiles'} =          # percentiles shown in spam scores report : amavis_spam_score_percentiles
+                                  "0 50 90 95 98 100";
+$Opts{'timings'}                = 95;      # show top N% of the timings report       : amavis_timings
+$Opts{'spamscore'}              = 1;       # show spam score percentiles             : amavis_show_spamscore
+$Opts{'sarules'}                = 1;       # show SpamAssassin rules hit             : amavis_sarules
+$Opts{'sarulestopham'}          = 20;      # show top N SpamAssassin ham hits        : amavis_sarulestopham
+$Opts{'sarulestopspam'}         = 20;      # show top N SpamAssassin spam hits       : amavis_sarulestopspam
+$Opts{'bayes'}                  = 1;       # show hit Bayesian buckets               : amavis_bayes
+$Opts{'startinfo'}              = 1;       # show amavis startup info                : amavis_show_startinfo
+
+# The amavis-logwatch.conf file is used only in
+# standalone mode, and contains configuration variables
+# set prior to command line variables.
+# XXX: make configurable via command line switch
+my $config_file = "/usr/local/etc/${progname_prefix}-logwatch.conf";
+
+# Logwatch passes a filter's options via environment variables.
+# When running standalone (w/out logwatch), use command line options
+#
+my $standalone = $ENV{LOGWATCH_DETAIL_LEVEL} eq '' ? 1 : 0;
+
+unless ($standalone) {
+   $Opts{'detail'} = $ENV{LOGWATCH_DETAIL_LEVEL};
+
+   if ($Opts{'detail'} < 10) {
+      $Opts{'startinfo'}        = 0;
+   } elsif ($Opts{'detail'} < 5) {
+      $Opts{'timings'}          = 0;
+   } else {
+      # increase defaults for max detail in logwatch, subject to config file override
+      $Opts{'timings'}          = 100;    
+      $Opts{'sarulestopham'}    = 0;
+      $Opts{'sarulestopspam'}   = 0;
+   }
+}
+
+# Totals and Counts are the log line accumulators.
+# Totals: maintains section grand total for use in Summary section
+# Counts: maintains per-level key totals
+my (%Totals, %Counts);
+
+my ($TimingsTotal, %Timings, %NewTimings);
+my (%SaveLine,%UnmatchedList, %StartInfo);
+my (@SpamScores);
+
+my $OrigLine;     # used globally
+
+# Notes:
+#
+#   IN REs, always use /o option at end of RE when RE uses interpolated vars
+
+# IPv4 only
+#my $re_IP      = '(?:\d{1,3}\.){3}(?:\d{1,3})';
+
+# IPv4 and IPv6
+# See syntax in RFC 2821 IPv6-address-literal,
+# eg. IPv6:2001:630:d0:f102:230:48ff:fe77:96e
+my $re_IP      = '(?:(?:::(?:ffff:|FFFF:)?)?(?:\d{1,3}\.){3}\d{1,3}|(?:(?:IPv6:)?[\da-fA-F]{0,4}:){2}(?:[\da-fA-F]{0,4}:){0,5}[\da-fA-F]{0,4})';
+
+sub usage($);
+sub version($);
+sub commify($);
+sub inc_unmatched($ $);
+sub get_vars_from_file($);
+sub env_to_cmdline(\%);
+sub buildTree(\% $ $);
+sub printTree($);
+sub printReports ($ \@);
+
+sub printSpamScoreReport;
+sub printSARulesReport;
+sub printTimingsReport;
+sub printStartupInfoReport;
+sub getpercentiles(\@ @);
+
+# References to these are used in the Formats table below; we'll predeclare them.
+$Totals{'TotalMsgs'} = 0;
+
+#
+# The Formats table drives reports.  For each entry in the table, a summary line and/or
+# detailed report section is a candidate for output, depending upon logwatch Detail
+# level, and .conf configuration variables.  Each entry below has four fields:
+#
+#   1: Key to %Counts and %Totals accumulator hashes
+#   2: Numeric output format specifier
+#   3: Summary and Section Title
+#   4: A hash to a divisor used to calculate the percentage of a total for that key
+#
+# Alternatively, when field 1 contains a single character, this character will
+# cause a line filled with that character to be output, but only if there was
+# output for that section.
+# The special name '__SECTION' is used to indicate the beginning of a new section.
+# This ensures the printReports routine does not print needless horizontal lines.
+#
+my @Formats = (
+   # Place configuration and critical errors first
+
+   [ '__SECTION' ],
+   [ 'Panic',                   "d", "*Panic" ],
+   [ 'Warning',                 "d", "*Warning" ],
+   [ '\n' ],
+
+   [ '__SECTION' ],
+   [ 'BytesScanned',            "Z", "Bytes scanned" ],
+   [ '-' ],
+
+   [ '__SECTION' ],
+   [ 'CleanMsgPassed',          "d", "Clean passed",                     \$Totals{'TotalMsgs'} ],
+   [ 'MalwarePassed',           "d", "Malware passed",                   \$Totals{'TotalMsgs'} ],
+   [ 'SpamPassed',              "d", "Spam passed",                      \$Totals{'TotalMsgs'} ],
+   [ 'UncheckedPassed',         "d", "Unchecked passed",                 \$Totals{'TotalMsgs'} ],
+   [ 'BannedNamePassed',        "d", "Banned file name passed",          \$Totals{'TotalMsgs'} ],
+   [ 'BadHeaderPassed',         "d", "Bad header passed",                \$Totals{'TotalMsgs'} ],
+   [ 'TempfailPassed',          "d", "Tempfail passed",                  \$Totals{'TotalMsgs'} ],
+
+   [ 'CleanMsgBlocked',         "d", "Clean blocked",                    \$Totals{'TotalMsgs'} ],
+   [ 'MalwareBlocked',          "d", "Malware blocked",                  \$Totals{'TotalMsgs'} ],
+   [ 'SpamBlocked',             "d", "Spam blocked",                     \$Totals{'TotalMsgs'} ],
+   [ 'UncheckedBlocked',        "d", "Unchecked blocked",                \$Totals{'TotalMsgs'} ],
+   [ 'BannedNameBlocked',       "d", "Banned file name blocked",         \$Totals{'TotalMsgs'} ],
+   [ 'BadHeaderBlocked',        "d", "Bad header blocked",               \$Totals{'TotalMsgs'} ],
+   [ 'TempfailBlocked',         "d", "Tempfail blocked",                 \$Totals{'TotalMsgs'} ],
+   [ 'SpamDiscarded',           "d", "Spam discarded (not quarantined)", \$Totals{'TotalMsgs'} ],
+   [ '-' ],
+   [ 'TotalMsgs',               "d", "Total Messages Scanned",           \$Totals{'TotalMsgs'} ],
+   [ '=' ],
+   [ '\n' ],
+   [ 'TotalHams',               "d", "Ham",                              \$Totals{'TotalMsgs'} ],
+   [ 'TotalSpams',              "d", "Spam",                             \$Totals{'TotalMsgs'} ],
+   [ '-' ],
+   [ 'TotalMsgs',               "d", "Total Messages Scanned",           \$Totals{'TotalMsgs'} ],
+   [ '=' ],
+   [ '\n' ],
+
+   [ '__SECTION' ],
+   [ 'ReleasedMsg',             "d", "Released from quarantine" ],
+   [ 'TruncatedHeader',         "d", "Truncated headers > 998 characters" ],
+   [ 'BadAddress',              "d", "Bad address syntax" ],
+   [ 'EmptyMember',             "d", "Archive contains zero length member" ],
+   [ 'EncryptedArchive',        "d", "Archive contains encrypted member" ],
+   [ 'DSNNotification',         "d", "DSN notification (debug supplemental)" ],
+   [ 'NoDSNSentBad',            "d", "DSN not sent: bad DSN" ],
+   [ 'NoDSNSentCutoff',         "d", "DSN not sent: spam score > DSN cutoff" ],
+   [ 'NoDSNSentFaked',          "d", "DSN not sent: presumed bogus sender" ],
+   [ 'NoSubject',               "d", "Header without subject line" ],
+   [ 'Whitelisted',             "d", "Whitelisted" ],
+   [ 'Blacklisted',             "d", "Blacklisted" ],
+   [ 'SATimeout',               "d", "SpamAssassin timeout" ],
+   [ 'AVTimeout',               "d", "Virus scanner timeout" ],
+   [ 'DccError',                "d", "DCC error" ],
+   [ 'MimeError',               "d", "MIME error" ],
+   [ 'BadHeaderSupp',           "d", "Bad header (debug supplemental)" ],
+   [ 'ExtraModules',            "d", "Extra code modules loaded at runtime" ],
+   [ 'MalwareByScanner',        "d", "Malware by scanner" ],
+   [ 'Bayes',                   "d", "Bayes probability" ],
+);
+
+# Initialize the Getopts option list
+my   @format_opts = ();
+push @format_opts, 'help';
+push @format_opts, 'version';
+push @format_opts, 'debug';
+push @format_opts, 'detail=i';
+push @format_opts, 'timings=i';
+push @format_opts, 'max_report_width=i';
+push @format_opts, 'startinfo!',             \$Opts{'startinfo'};
+push @format_opts, 'show_startinfo=i',       \$Opts{'startinfo'};
+push @format_opts, 'spamscore!',             \$Opts{'spamscore'};
+push @format_opts, 'show_spamscore=i',       \$Opts{'spamscore'};
+push @format_opts, 'spamscore_percentiles=s';
+push @format_opts, 'timing_percentiles=s',   \$Opts{'timing_percentiles'};
+push @format_opts, 'percentiles=s',          \$Opts{'timing_percentiles'};
+push @format_opts, 'sarules!',               \$Opts{'sarules'};
+push @format_opts, 'show_sarules=i',         \$Opts{'sarules'};
+push @format_opts, 'sarulestopham=i',        \$Opts{'sarulestopham'};
+push @format_opts, 'sarulestopspam=i',       \$Opts{'sarulestopspam'};
+
+# Continue building the Getopts option list from the keys
+# in the Formats list. Any option that matches a key in the Formats list
+# controls the max print level for that section.
+foreach ( @Formats ) {
+   # ignore output formatting specifiers
+   next if ($_->[0] =~ /^.$/);    
+   next if ($_->[0] =~ /^\\n$/);
+   next if ($_->[0] =~ /^__/);
+
+   # all Formats-derived options are integers
+   push @format_opts, "\L$_->[0]=i";
+}
+
+# All options are placed into, and processed from ARGV.
+# Most recently seen options override earlier options.
+#
+if ($standalone) {
+   # In standalone mode, obtain any options specified in
+   # a logwatch-style config file
+   my $href = get_vars_from_file($config_file);
+   if (-f "$config_file") {
+      get_vars_from_file($config_file);
+      unshift @ARGV, env_to_cmdline(%$href);
+   }
+} else {
+   # logwatch passes all config vars via environment variables 
+   @ARGV=env_to_cmdline(%ENV);
+}
+
+#print "ARGC: ", scalar @ARGV, ", ARGV: @ARGV\n";
+#$Getopt::Long::debug = 1;
+
+GetOptions (\%Opts, @format_opts) || usage(undef);
+
+exists $Opts{'version'} && version(undef);
+exists $Opts{'help'} && usage(undef);
+
+#map { print "KEY: $_ => $Opts{$_}\n"}  keys %Opts;
+#print "ARGC: ", scalar @ARGV, "ARGV: @ARGV\n";
+
+# Main processing loop
+#
+while (<>) {
+   my $p1 = $_;
+   my ($p2, $pid);
+
+   my $action = "Blocked";    # default action is blocked if not present in log
+
+   chomp ($p1);
+   $OrigLine = $p1;
+
+   if ($standalone) {
+      next unless $p1 =~ s/^... .. ..:..:.. \S+ amavis\[\d+\]: //;
+   }
+
+   # For now, ignore the amavis startup timing lines.  Need to do this
+   # before stripping out the amavis pid to differentiate these from the
+   # scan timing reports
+   next if ($p1 =~ /^TIMING/);
+
+   # Strip amavis process id-instance id, or release id
+   if (($pid,$p2) = ($p1 =~ /^\(([^)]+)\) (.*)$/ )) {
+      $p1 = $p2;
+   }
+
+   # Handle continuation lines.  This assumes continuation lines
+   # are in increasing order per PID, meaning line1, line2, line3,
+   # but never line3, line1, line2.
+   #
+   # ... a continued line
+   if ($p1 =~ /^\.\.\./) {
+      if (!exists($SaveLine{$pid})) {
+         #printf "Unexpected continue line: \"%s\"\n", $p1;
+         $SaveLine{$pid} = '';
+      }
+      $p1 =~ /^\.\.\.(.*)$/;  $p1 = $SaveLine{$pid} . $1;
+      $SaveLine{$pid} = $p1;
+   }
+
+   # this line continues ...
+   if ($p1 =~ /\.\.\.$/) {
+      $p1 =~ /^(.*)\.\.\.$/;  $SaveLine{$pid} = $1;
+      next;
+   }
+
+   if (exists($SaveLine{$pid})) {
+      # printf "END OF SaveLine: %s\n", $SaveLine{$pid};
+      $p1 = delete $SaveLine{$pid};
+   }
+
+   #if (length($p1) > 10000) {
+   #   printf "Long log entry %d chars: \"%s\"\n", length($p1), $p1;
+   #   next;
+   #}
+
+   #print "p1: \"$p1\"\n";
+
+   next if (
+       # We don't care about these
+           ($p1 =~ /^do_ascii/) 
+        or ($p1 =~ /^Found av scanner/) 
+        or ($p1 =~ /^Found myself/)
+        or ($p1 =~ /^Checking/)
+        or ($p1 =~ /^(ESMTP|FWD|SEND) via/)
+        or ($p1 =~ /^spam_scan/)
+        or ($p1 =~ /^Not-Delivered/)
+        or ($p1 =~ /^SpamControl/)
+        or ($p1 =~ /^Perl/)
+        or ($p1 =~ /^ESMTP/)
+        or ($p1 =~ /^tempdir being removed/)
+        or ($p1 =~ /^mail_via_smtp/)
+        or ($p1 =~ /^local delivery: /)
+        or ($p1 =~ /^do_notify_and_quarantine: .*ccat=/)
+        or ($p1 =~ /^cached [a-zA-Z0-9]+ /)
+        or ($p1 =~ /^loaded policy bank/)
+        or ($p1 =~ /^wbl: soft-(?:white|black)listed/)
+        or ($p1 =~ /^p\d+ \d+(\/\d+)* Content-Type: /)
+        or ($p1 =~ /^Requesting (a |)process rundown after [0-9]+ tasks/)
+        or ($p1 =~ /^NOTICE: Not sending DSN, spam level [0-9.]+ exceeds DSN cutoff level/)
+        or ($p1 =~ /^INFO: unfolded \d+ illegal all-whitespace continuation line/)
+        or ($p1 =~ /^Cached (virus|spam) check expired/)
+        or ($p1 =~ /^p\.path BANNED/)
+        or ($p1 =~ /^pr(?:esent|ovid)ing full original message to scanners as/)  # log level 2
+        or ($p1 =~ /^Actual message size [0-9]+ B(,| greater than the) declared [0-9]+ B/)
+        or ($p1 =~ /^disabling DSN/)
+        or ($p1 =~ /^(?:run|ask)_av /)
+        or ($p1 =~ /^Virus [^,]+ matches [^,]+, sender addr ignored/)
+        or ($p1 =~ /^Not calling virus scanners, no files to scan in/)
+        or ($p1 =~ /^lookup_ip_acl /)
+        or ($p1 =~ /^release /)
+        or ($p1 =~ /^Waiting for the process \S+ to terminate/)
+        or ($p1 =~ /^Valid PID file \(younger than sys uptime/)
+        or ($p1 =~ /^Sending SIG\S+ to amavisd/)
+        or ($p1 =~ /^Can't send SIG\S+ to process/)
+        or ($p1 =~ /^killing process/)
+        or ($p1 =~ /^no need to kill process/)
+        or ($p1 =~ /^process .* is still alive/)
+        or ($p1 =~ /^Daemon \[\d+\] terminated by SIG/)
+        or ($p1 =~ /^TIMING.*got data/)    # skip amavis release timing
+        or ($p1 =~ /^OS_fingerprint: /)
+        or ($p1 =~ /^run_as_subprocess: child process \S*: Broken pipe/)
+        or ($p1 =~ /^Sophie broken pipe \(don't worry\), retrying/)
+        or ($p1 =~ /^penpals: (bonus|prev Subject:|this Subject:) /)
+        or ($p1 =~ /^virus_scan: \(bad jpeg: Invalid marker segm len/)
+        or ($p1 =~ /^adding SA score \S+ to existing/)
+        or ($p1 =~ /^Turning AV infection into a spam report:/)
+        or ($p1 =~ /^The amavisd daemon is already running/)
+        or ($p1 =~ /^parse_message_id/)
+        or ($p1 =~ /email.txt no longer exists, can't re-use it/)
+        or ($p1 =~ /SPAM\.TAG2/)
+        or ($p1 =~ /BAD-HEADER\.TAG2/)
+   );
+
+   my ($ip, $from, $to, $key, $hits, $reason, $item, $decoder);
+
+   # log_level >= 2 || (log_level > 2 && syslog_priority=debug)
+   if (my ($isspam,$tests,$autolearn) = ($p1 =~ /^SPAM(?:-TAG)?,.* (Yes|No), score=[-+x\d.]+.* tests=\[([^\]]*)](?:, autolearn=(\w+))?/)) {
+      #TD SPAM, <from@example.com> -> <to@sample.com>, Yes, score=17.709 tag=-10 tag2=6.31 kill=6.31 tests=[AWL=-0.678, BAYES_99=4], autolearn=spam, quarantine Cc4+GUJhgpqh (spam-quarantine)
+      #TD SPAM, <from@example.com> -> <to@sample.net>, Yes, score=21.161 tag=x tag2=8.15 kill=8.15 tests=[BAYES_99=2.5, FORGED_RCVD_HELO=0.135], autolearn=no, quarantine m6lWPoTGJ2O (spam-quarantine)
+      #TD SPAM, <from@example.com> -> <to@sample.net>, Yes, score=17.887 tag=-10 tag2=6.31 kill=6.31 tests=[BAYES_99=4], autolearn=spam, quarantine VFYjDOVTW4zd (spam-quarantine)
+      #TD SPAM-TAG, <from@example.com> -> <to@sample.net>, No, score=-0.069 tagged_above=-10 required=6.31 tests=[BAYES_00=-2.599, FROM_ENDS_IN_NUMS=2.53]
+      #TD SPAM-TAG, <from@example.com> -> <to@sample.net>, No, score=-1.294 required=8.15 tests=[BAYES_00=-2.599, FROM_LOCAL_HEX=1.305]
+
+      if ($tests) {
+         my $type = $isspam =~ /^Y/ ? 'Spam' : 'Ham';
+         for (split /=[^,]+(?:, +|$)/, $tests) {
+            $Counts{'SArules'}{$type}{$_}++;
+            $Counts{'Bayes'}{$_}++   if (/^BAYES_\d+$/);
+         }
+         #autolearn= is available only at ll>=3 or SPAM messages; so ham should never occur here?
+         #no, ham, spam, unavailable
+         #$Counts{'Autolearn'}{$type}{$_}
+      }
+   }
+
+   # CleanMsgPassed, CleanMsgBlocked
+   elsif (($action,$hits) = ($p1 =~ /^(Passed|Blocked)(?: CLEAN)?,.*Hits: ([-+.\d]+), /)) {
+      if ($hits !~ /^-$/) {
+         if ($hits =~ /^-?[.\d]+[-\+][.\d]+$/) {
+            $hits = eval $hits;
+         }
+         push @SpamScores, $hits;
+      }
+      $Totals{"CleanMsg$action"}++;
+
+   } elsif (my ($size) = ($p1 =~ /^LMTP::\d+ .* SIZE=(\d+) / )) {
+        # LMTP::10024 /var/spool/amavis/tmp/amavis-20070119T144757-09086: <from@example.com> -> <to@sample.net> SIZE=131730 Received: from mail.sample.net ([127.0.0.1]) by localhost (mail.sample.net [127.0.0.1]) (amavisd-new, port 10024) with LMTP for <to@sample.net>; Fri, 19 Jan 2007 15:41:45 -0800 (PST)
+        $Totals{'BytesScanned'} += $size;
+
+   # SpamPassed, SpamBlocked
+   } elsif (($action, $ip, $from, $to, $hits) = ( $p1 =~ /^(?:(Passed|Blocked) )?SPAM(?:MY)?,[^[]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [<(]([^>)]*)[>)] -\> [(<]([^>)]*)[)>],.*Hits: ([-+.\d]+),/o )) {
+      #TD Blocked SPAM, [10.0.0.1] [192.168.0.1] <bogus@example.com> -> <to@sample.net>, quarantine: spam-EzEbE9W, Message-ID: <117894@example.com>, mail_id: EzEbE9W, Hits: 6.364, size: 16493, 6292 ms
+      #TD Blocked SPAM, LOCAL [10.0.0.1] [10.0.0.2] <bogus@example.com> -> <to@sample.net>, quarantine: spam-EzEbE9W, Message-ID: <110394@example.com>, mail_id: EzEbE9W, Hits: 6.364, size: 16493, 6292 ms
+      #TD Blocked SPAM, [IPv6:2001:630:d0:f102:230:48ff:fe77:96e] [192.168.0.1] <joe@example.com> -> <user@sample.net>, quarantine: spam-EzEbE9W, Message-ID: <11780394@example.com>, mail_id: EzEbE9W, Hits: 6.364, size: 16493, 6292 ms
+      #TD Passed SPAMMY, ORIGINATING/MYNETS LOCAL [10.0.0.1] [10.0.0.1] <from@example.com> -> <to1@sample.net>,<to2@sample.net>, quarantine: spam-EzEbE9W, Message-ID: <11780394@example.com>, mail_id: EzEbE9W, Hits: 6.364, size: 16493, 6292 ms
+      #TD Blocked SPAM, B-BANK/C-BANK/B-BANK [10.0.0.1] [10.0.0.1] <from@sample.net> -> <to@example.com>, quarantine: spam-EzEbE9W, Message-ID: <11780394@example.com>, mail_id: EzEbE9W, Hits: 6.364, size: 16493, 6292 ms
+      #TD Blocked SPAM, [10.0.0.1] [10.0.0.1] <from@example.com> -> <to@sample.net>, quarantine: spam-AV49p5, Message-ID: <1.007@sample.net>, mail_id: AV49p5, Hits: 7.487, size: 27174, 4406 ms
+
+      # XXX can null IPs occur? they shouldn't...
+      # print "Spam$action: ip: \"$ip\", From: \"$from\", To: \"$to\"\n";
+
+      $from = '<>' if ($from =~ /^$/);
+
+      if ($hits !~ /^-$/) {
+         if ($hits =~ /^(-?[.\d]+[-+][.\d]+)$/) {
+            $hits = eval $hits;
+         }
+         push @SpamScores, $hits;
+      }
+
+      # comment out to use above uncommented code
+      $Totals{"Spam$action"}++;
+      #$Counts{"Spam$action"}{$ip}{"\L$to"}{$from}++;
+      # XXX make this runtime dynamic based on config
+      # uncomment to group by To rather than ip
+      $Counts{"Spam$action"}{"\L$to"}{$ip}{$from}++;
+
+   # MalwarePassed, MalwareBlocked
+   } elsif (($action, $key, $ip, $from, $to) = ( $p1 =~ /^(?:Virus found - quarantined|(?:(Passed|Blocked) )?INFECTED) \(([^\)]+)\),[A-Z .]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [<(]([^>)]*)[>)] -> [(<]([^(<]+)[(>]/o )) {
+      #TD Blocked INFECTED (HTML.Phishing.Bank-43), [198.168.0.1] [10.0.0.1] <bogus@example.com> -> <to@sample.net>, 
+      #TD Blocked INFECTED (Trojan.Downloader.Small-9993), LOCAL [10.0.0.2] [10.0.0.2] <bogus@example.net> -> <to@example.com>, 
+      # print "Key: \"$key\", ip: \"$ip\", From: \"$from\", To: \"$to\"\n";
+
+      $from = '<>' if ($from =~ /^$/);
+      $Totals{"Malware$action"}++;
+      $Counts{"Malware$action"}{$key}{"\L$to"}{$ip}{$from}++;
+
+   # BannedNamePassed, BannedNameBlocked
+   } elsif (($action, $item, $ip, $from, $to) = ( $p1 =~ /^(?:(Blocked|Passed) )?BANNED (?:name\/type )?\((.+)\),[^[]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [<(]([^>)]*)[>)] -> [(<]([^(<]+)[(>]/o)) {
+      # the first IP is the envelope sender.
+      #TD Blocked BANNED (multipart/report | message/partial,.txt), [192.168.0.1] [10.0.0.2] <> -> <someuser@sample.net>
+      #TD Blocked BANNED (multipart/report | message/partial,.txt), LOCAL [192.168.0.1] [10.0.0.2] <> -> <someuser@sample.net>
+      #TD Blocked BANNED (multipart/mixed | application/octet-stream,.asc,=?iso-8859-1?Q?FTP=5FFile=5F (1)=File(1).reg), [192.168.0.0] [192.168.0.0] <from@example.com> -> <to@sample.us>, 
+      # print "Item: \"$item\", ip: \"$ip\", From: \"$from\", To: \"$to\"\n";
+
+      $from = '<>' if ($from =~ /^$/);
+      $Totals{"BannedName$action"}++;
+      $Counts{"BannedName$action"}{"\L$to"}{$item}{$ip}{$from}++;
+
+   # BadHeaderPassed, BadHeaderBlocked
+   } elsif (($action, $ip, $from, $to) = ( $p1 =~ /^(?:(Blocked|Passed) )?BAD-HEADER,[^[]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [(<]([^>)]*)[)>](?: -\> [(<]([^>)]+)[)>])[^:]*/o )) {
+      #TD Passed BAD-HEADER, [192.168.0.1] [10.0.0.2] <bogus@example.com> -> <someuser@sample.net>
+      #TD Passed BAD-HEADER, LOCAL [192.168.0.1] [10.0.0.2] <bogus@example.com> -> <someuser@sample.net>
+      #TD Passed BAD-HEADER, MYNETS AM.PDP [127.0.0.1] [127.0.0.1] <bogus@example.com> -> <someuser@sample.net>
+      #TD Passed BAD-HEADER, ORIGINATING/MYNETS LOCAL [10.0.0.1] [10.0.0.1] <from@sample.net> -> <to1@sample.net>,<to2@sample.net>,<to3@example.com>, 
+      # print "Bad Header: ip: \"$ip\", From: \"$from\", To: \"$to\"\n";
+
+      $from = '<>' if ($from =~ /^$/);
+      $Totals{"BadHeader$action"}++;
+      $Counts{"BadHeader$action"}{"\L$to"}{$ip}{$from}++;
+
+   # UncheckedPassed, UncheckBlocked
+   } elsif (($action, $ip, $from, $to) = ( $p1 =~ /^(?:(Passed|Blocked) )?UNCHECKED,[^[]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [<(]([^>)]*)[>)] -\> [(<]([^>)]*)[)>]/o )) {
+      #TD Passed UNCHECKED, MYNETS LOCAL [192.168.0.1] [192.168.0.1] <from@sample.net> -> <to@example.com> Message-ID: <002e01c759c7$5de437b0$0a02a8c0@somehost>, mail_id: 7vtR-7BAvHZV, Hits: -, queued_as: B5420C2E10, 6585 ms
+
+      $from = '<>' if ($from =~ /^$/);
+      $Totals{"Unchecked$action"}++;
+      $Counts{"Unchecked$action"}{"\L$to"}{$ip}{$from}++;
+
+   # TempFailPassed, TempFailBlocked
+   } elsif (($action, $ip, $from, $to) = ( $p1 =~ /^(?:(Passed|Blocked) )?TEMPFAIL,[^[]*(?: \[($re_IP)\])?(?: \[$re_IP\])* [<(]([^>)]*)[>)] -\> [(<]([^>)]*)[)>]/o )) {
+      #TD Blocked TEMPFAIL, [10.0.0.2] [10.0.0.1] <user@example.com> -> <to@sample.net>, Message-ID: <200703302301.9f1899470@example.com>, mail_id: bgf52ZCNbPo, Hits: -2.586, 3908 ms
+
+      $from = '<>' if ($from =~ /^$/);
+      $Totals{"Tempfail$action"}++;
+      $Counts{"Tempfail$action"}{"\L$to"}{$ip}{$from}++;
+
+   } elsif ( ($reason) = ( $p1 =~ /^BAD HEADER from [^:]+: (.+)$/ ) or
+             ($reason) = ( $p1 =~ /check_header: \d, (.+)$/ ) ) {
+      # When log_level > 1, provide additional header or MIME violations
+
+      # amavisd < 2.4.0, log_level >= 1
+      #TD BAD HEADER from <bogus@example.com>: Improper use of control character (char 0D hex) in message header 'Received': Received: example.com[10.0.0.1\r]
+      #TD BAD HEADER from <bogus@example.com>: MIME error: error: part did not end with expected boundary
+      #TD BAD HEADER from <bogus@example.com>: Non-encoded 8-bit data (char F7 hex) in message header 'Subject': Subject: \367\345\370\361 \344\351\351\362\345\365\n    
+      #TD BAD HEADER from (bulk ) <bogus@bounces@lists.example.com>: Non-encoded 8-bit data (char E6 hex) in message header 'Subject': Subject: spam\\346ham\\n 
+      #TD BAD HEADER from (list) <bogus@bounces@lists.example.com>: MIME error: error: part did not end with expected boundary
+      #  amavisd >= 2.4.3, log_level >= 2
+      #TD check_header: 2, Non-encoded 8-bit data (char AE hex): Subject: RegionsNet\\256 Online Banking\\n
+      #TD check_header: 2, Non-encoded 8-bit data (char E1 hex): From: "any user" <from\\341k@example.com>\\n
+      #TD check_header: 8, Duplicate header field: "Reply-To"
+      #TD check_header: 8, Duplicate header field: "Subject"
+
+      my $subreason;
+      my ($p1, $p2, $p3, $p4);
+      if ( ($p1, $p2, $p3) = ($reason =~ /^(Non-encoded 8-bit data) \((char \S+ hex)\): (.*)$/ )) {
+         $reason = $p1;
+         $subreason = "$p2: $p3";
+      }
+      elsif ( ($p1, $p2, $p3) = ($reason =~ /^(Improper use of control character|Non-encoded 8-bit data) \((char \S+ hex)\) in \S+ header [^:]+: (.+)$/ )) {
+         $reason = $p1;
+         $subreason = "$p2: $p3";
+      }
+      elsif ( ($p1, $p2) = ($reason =~ /^(Duplicate header field): "(.+)"$/ )) {
+         $reason = $p1;
+         $subreason = $p2;
+      }
+      elsif ( ($p1, $p2) = ($reason =~ /^(MIME error): (?:error: )?(.+)$/ )) {
+         $reason = $p1;
+         $subreason = $p2;
+      }
+
+      $Totals{'BadHeaderSupp'}++;
+      $Counts{'BadHeaderSupp'}{$reason}{$subreason}++;
+
+   } elsif ( ($reason) = ( $p1 =~ /^INFO: truncated \d+ header line\(s\) longer than 998 characters/ )) {
+      #TD INFO: truncated 1 header line(s) longer than 998 characters
+      $Totals{'TruncatedHeader'}++;
+
+   } elsif ( ($reason) = ( $p1 =~ /^WARN: MIME::Parser error: (.*)$/ )) {
+      # WARN: MIME::Parser error: unexpected end of header
+      $Totals{'MimeError'}++;
+      $Counts{'MimeError'}{$reason}++;
+
+   } elsif (($item, $from, $to) = ( $p1 =~ /^Quarantined message release: ([^ ]+) <([^>]+)> -> (.+)$/ ) or
+            ($item, $from, $to) = ( $p1 =~ /^Quarantine release ([^ ]+): overriding recips <([^>]+)> by (.+)$/ )) {
+      #TD Quarantined message release: hiyPJOsD2m9Z <from@sample.net> -> <to@example.com>
+      #TD Quarantined message release: hiyPJOsD2m9Z <user@example.com> -> <to@recipient.maildir>,<anyone@example.com>
+      #TD Quarantine release arQcr95dNHaW: overriding recips <TO@EXAMPLE.COM> by <to@example.com>
+      $to =~ s/[<>]//g;
+      $Totals{'ReleasedMsg'}++;
+      $Counts{'ReleasedMsg'}{"\L$from"}{$to}{$item}++;
+
+   } elsif ( $p1 =~ /: spam level exceeds quarantine cutoff level/ ) {
+      $Totals{'SpamDiscarded'}++;
+
+   } elsif ( $p1 =~ /^NOTICE: Not sending DSN, spam level exceeds DSN cutoff level(?: for all recips)?, mail intentionally dropped/ ) {
+      $Totals{'NoDSNSentCutoff'}++;
+
+   } elsif ( $p1 =~ /^NOTICE: Not sending DSN to believed-to-be-faked sender/ ) {
+      $Totals{'NoDSNSentFaked'}++;
+
+   } elsif ( $p1 =~ /^NOTICE: DSN contains [^;]+; bounce is not bounc[ai]ble, mail intentionally dropped/ ) {
+      $Totals{'NoDSNSentBad'}++;
+
+   } elsif ( ($action,$reason,$from,$to) = ($p1 =~ /^DSN: NOTIFICATION: Action:([^,]+), ([^,]+), <([^>]*)> -> <([^>]*)>/ )) {
+      #TD DSN: NOTIFICATION: Action:failed, LOCAL 554 Banned, <from@example.net> -> <to@example.com>
+      #TD DSN: NOTIFICATION: Action:delayed, LOCAL 454 Banned, <from@example.com> -> <to@example.net>
+
+      $Totals{'DSNNotification'}++;
+      $Counts{'DSNNotification'}{$action}{$reason}{"$from -> $to"}++;
+
+   } elsif ( $p1 =~ /^INFO: no existing header field 'Subject', inserting it/ ) {
+      $Totals{'NoSubject'}++;
+
+   } elsif ( ($item) = ($p1 =~ /^response to RCPT TO for <([^>]*)>: "501 Bad address syntax"/ )) {
+      #TD response to RCPT TO for <""@example.com>: "501 Bad address syntax"
+      $Totals{'BadAddress'}++;
+      $Counts{'BadAddress'}{$item}++;
+
+   } elsif ( ($reason) = ( $p1 =~ /^do_unzip: \S+, \d+ members are encrypted, (.*)$/ )) {
+      #TD do_unzip: p003, 4 members are encrypted, none extracted, archive retained
+      $Totals{'EncryptedArchive'}++;
+      $Counts{'EncryptedArchive'}{$reason}++;
+
+   } elsif ( $p1 =~ /^do_unzip: \S+, zero length members, archive retained/ ) {
+      #TD do_unzip: p002, zero length members, archive retained
+      $Totals{'EmptyMember'}++;
+
+   } elsif ( $p1 =~ /^(?:\(!\) *)?SA TIMED OUT,/ ) {
+      $Totals{'SATimeout'}++;
+
+   # I don't know how many variants of time outs there are... I suppose we'll fix as we go
+   } elsif ( ($p1 =~ /^\(!+\)[^ ]* is taking longer than \d+ s and will be killed/) or 
+             ($p1 =~ /^\(!+\).* av-scanner FAILED: timed out/ ) or
+             ($p1 =~ /^ClamAV.*: timed out/ ) ) {
+      # (!)/usr/local/bin/uvscan is taking longer than 10 s and will be killed: 1 Time(s)
+      # (!!)NAI McAfee AntiVirus (uvscan) av-scanner FAILED: timed out: 1 Time(s)
+      # ClamAV-clamd: timed out, retrying (1): 1 Time(s)
+      $Totals{'AVTimeout'}++;
+
+   } elsif (my  ($msg) = ($p1 =~ /^(?:\(!\)\s*)?WARN: (.*)$/ )) {
+      #TD (!)WARN: Using cpio instead of pax can be a security risk; please add:  $pax='pax';  to amavisd.conf and check that the pax(1) utility is available on the system!
+
+      $Totals{'Warning'}++;
+      $Counts{'Warning'}{$msg}++;
+
+   # catchall for all other warnings
+   } elsif ( ($msg) = ($p1 =~ /^\(!+\)\s*(.*)$/ )) {
+      #TD (!)loading policy bank "AM.PDP-SOCK": unknown field "0"
+      #TD (!)ClamAV-clamd: Can't connect to UNIX socket /var/run/clamav/clamd: Connection refused, retrying (2)
+      #TD (!!)policy_server FAILED: SQL quarantine code not enabled at (eval 37) line 306, <GEN6> line 4.
+      #TD (!!)policy_server FAILED: Can't open file /var/spool/amavis/quarantine/spam-CFJYXmeS+FLy: Permission denied at (eval 37) line 330, <GEN28> line 5.
+
+      $Totals{'Warning'}++;
+      $Counts{'Warning'}{$msg}++;
+
+   # forced these into warning messages.  Keep this code below warning catchall
+   } elsif ( $p1 =~ /Can't (?:connect to UNIX|send to) socket/ or
+             $p1 =~ /ClamAV-clamd: Empty result from .*clamd/ or
+             $p1 =~ /^SMTP shutdown:/ or 
+             $p1 =~ m#open\(/var/dcc/map\): Permission denied# )
+   {
+      #TD ClamAV-clamd: Can't connect to UNIX socket /var/run/clamav/clamd: Connection refused, retrying (1)
+      #TD ClamAV-clamd: Can't send to socket /var/run/clamav/clamd: Transport endpoint is not connected, retrying (1)
+      #TD ClamAV-clamd: Empty result from /var/run/clamav/clamd, retrying (1)
+      #TD SMTP shutdown: Error writing a SMTP response to the socket: Broken pipe at (eval 49) line 836, <GEN232> line 51.\n
+      #TD dccproc[17422]: open(/var/dcc/map): Permission denied
+
+      $Totals{'Warning'}++;
+      $Counts{'Warning'}{$p1}++;
+
+   } elsif ( ($msg) = ($p1 =~ /^(?:\(!\)\s*)?PANIC, (.*)$/ )) {
+      #TD PANIC, PANIC, SA produced a clone process of [19122], TERMINATING CLONE [19123]
+
+      $Totals{'Panic'}++;
+      $Counts{'Panic'}{$msg}++;
+
+   } elsif ( $p1 =~ /^missing message body; fatal error/ ) {
+      $Totals{'DccError'}++;
+
+   } elsif (($p1 =~ /^white_black_list: whitelisted sender/ )
+	 		or ( $p1 =~ /.* WHITELISTED/) ) {
+	 		$Totals{'Whitelisted'}++;
+
+   } elsif (($p1 =~ /^white_black_list: blacklisted sender/ )
+	 		or ( $p1 =~ /.* BLACKLISTED/) ) {
+	 		$Totals{'Blacklisted'}++;
+
+   } elsif ( my ($malware, $scanners) = ($p1 =~ /virus_scan: \(([^)]+)\), detected by \d+ scanners: (.*)$/ )) {
+      #TD virus_scan: (HTML.Phishing.Bank-43), detected by 1 scanners: ClamAV-clamd
+      #TD virus_scan: (Worm.SomeFool.D, Worm.SomeFool.D), detected by 1 scanners: ClamAV-clamd
+      #TD virus_scan: (Trojan.Downloader.Small-9993), detected by 2 scanners: ClamAV-clamd, NAI McAfee AntiVirus (uvscan)
+      foreach (split /, /, $scanners) {
+         #$Totals{'MalwareByScanner'}++;       # No summary output: redundant w/Malware{Passed,Blocked}
+         $Counts{'MalwareByScanner'}{"$_"}{$malware}++;
+      }
+
+   # Extra Modules loaded at runtime
+   } elsif (($item) = ( $p1 =~ /^extra modules loaded: (.+)$/ )) {
+      #TD extra modules loaded: unicore/lib/gc_sc/Digit.pl, unicore/lib/gc_sc/SpacePer.pl
+      foreach my $code (split /, /, $item) {
+         $Totals{'ExtraModules'}++;
+         $Counts{'ExtraModules'}{$code}++;
+      }
+
+   # Timing report
+   } elsif (my ($report) = ( $p1 =~ /^TIMING \[total \d+ ms\] - (.+)$/ )) {
+      #TD TIMING [total 5808 ms] - SMTP greeting: 5 (0%)0, SMTP LHLO: 1 (0%)0, SMTP pre-MAIL: 2 (0%)0, SMTP pre-DATA-flush: 5 (0%)0, SMTP DATA: 34 (1%)1, check_init: 1 (0%)1
+
+      # Timing line is incomplete - let's report it
+      if ($p1 !~ /\d+ \(\d+%\)\d+$/) {
+         inc_unmatched('timing', $OrigLine);
+         next;
+      }
+
+      my @Sections = split(/[,:] /, $report);
+      while (my ($key,$value) = @Sections) {
+         #4 (0%)0
+         my ($ms) = ($value =~ /^(\d+) /);
+         $Timings{$key} += $ms;
+         $TimingsTotal += $ms;
+         push @{$NewTimings{$key}}, $ms;
+         shift @Sections; shift @Sections;
+         #print "$key: $Timings{$key} (Added $ms)\n";
+      }
+
+   # Decoders
+   } elsif (my ($suffix, $info) = ( $p1 =~ /^Internal decoder for (\.\S*)\s*(?:\(([^)]*)\))?$/ )) {
+      #TD Internal decoder for .gz   (backup, not used)
+      #TD Internal decoder for .zip 
+      $StartInfo{'Decoders'}{'Internal'}{$suffix} = $info;
+
+   } elsif (($suffix, $decoder) = ( $p1 =~ /^No decoder for\s+(\.\S*)\s+tried:\s+(.*)$/ )) {
+      $StartInfo{'Decoders'}{'None'}{$suffix} = "tried: $decoder";
+
+   } elsif (($suffix, $decoder) = ( $p1 =~ /^Found decoder for\s+(\.\S*)\s+at\s+(.*)$/ )) {
+      $StartInfo{'Decoders'}{'External'}{$suffix} = $decoder;
+
+   # AV Scanners
+   } elsif (my ($tier, $scanner, $location) = ( $p1 =~ /^Found (primary|secondary) av scanner (.+) at (.+)$/ )) {
+      #TD Found primary av scanner NAI McAfee AntiVirus (uvscan) at /usr/local/bin/uvscan
+      #TD Found secondary av scanner ClamAV-clamscan at /usr/local/bin/clamscan
+
+      $StartInfo{'AVScanner'}{"\u$tier"}{$scanner} = $location;
+
+   } elsif ( (($tier, $scanner) = ( $p1 =~ /^Using internal av scanner code for \(([^)]+)\) (.+)$/ )) or
+             (($tier, $scanner) = ( $p1 =~ /^Using (.*) internal av scanner code for (.+)$/ ))) {
+      #TD Using internal av scanner code for (primary) ClamAV-clamd
+      #TD Using primary internal av scanner code for ClamAV-clamd
+
+      $StartInfo{'AVScanner'}{"\u$tier internal"}{$scanner} = "";
+
+   # (Un)Loaded code, protocols, etc.
+   } elsif (my ($code, $loaded) = ( $p1 =~ /^(\S+)\s+(?:proto? |base )?\s*(?:code)?\s+((?:NOT )?loaded)$/ )) {
+      $StartInfo{'Code'}{"\u\L$loaded"}{$code} = "";
+
+   } elsif (my ($savers1, $savers2, $item) = ( $p1 =~ /^INFO: (?:SA version: ([^,]+), ([^,]+), )?no optional modules: (.+)$/ )) {
+      #TD INFO: SA version: 3.1.8, 3.001008, no optional modules: DBD::mysql Mail::SpamAssassin::Plugin::DKIM Mail::SpamAssassin::Plugin::URIDetail Error
+      if ($savers1 !~ /^$/) {
+         $StartInfo{'sa_version'} = "$savers1 ($savers2)";
+      }
+      foreach my $code (split / /, $item) {
+         $StartInfo{'Code'}{'Not loaded'}{$code} = "";
+      }
+   } elsif (my ($module, $vers,) = ( $p1 =~ /^Module (\S+)\s+(.+)$/ )) {
+      #TD Module Amavis::Conf        2.086
+      $StartInfo{'Code'}{'Loaded'}{$module} = $vers;
+
+   } elsif (($code, $location) = ( $p1 =~ /^Found \$(\S+)\s+at\s+(\S+)$/ )) {
+      #TD Found $file            at /usr/bin/file
+      $StartInfo{'Code'}{'Loaded'}{$code} = $location;
+
+   } elsif (($code, $location) = ( $p1 =~ /^No \$(\S+),\s+not using it/ )) {
+      #TD No $dspam,             not using it
+      $StartInfo{'Code'}{'Not loaded'}{$code} = $location;
+
+   } elsif ( $p1 =~ /^starting\.\s+(.+) at \S+ amavisd-new-([^,]+),/ ) {
+      #TD starting.  /usr/local/sbin/amavisd at mailhost.example.com amavisd-new-2.5.0 (20070423), Unicode aware, LANG="C"
+      %StartInfo = ('ampath' => $1, 'amversion' => $2);            # track only most recent startup
+
+   } elsif ( $p1 =~ /^Creating db in ([^;]+); [^,]+, (.*)$/ ) {
+      #TD Creating db in /var/spool/amavis/db/; BerkeleyDB 0.31, libdb 4.4
+      $StartInfo{'db'} = "$1\t($2)";
+ 
+   } elsif (my ($log) = ($p1 =~ /^logging initialized, log (level \d+, syslog: \S+)/ )) {
+      $StartInfo{'Logging'} = $log;
+
+   } elsif (( $p1 =~ /^user=([^,]*), EUID: (\d+) [(](\d+)[)];\s+group=([^,]*), EGID: ([\d ]+)[(]([\d ]+)[)]/ )) {
+   # uninteresting...
+   #   $StartInfo{'IDs'}{'user'} = $1;
+   #   $StartInfo{'IDs'}{'euid'} = $2;
+   #   $StartInfo{'IDs'}{'uid'} = $3;
+   #   $StartInfo{'IDs'}{'group'} = $4;
+   #   $StartInfo{'IDs'}{'egid'} = $5;
+   #   $StartInfo{'IDs'}{'gid'} = $6;
+
+   } elsif (($p2) = ( $p1 =~ /^Net::Server: (.*)$/ )) {
+      if ($p2 =~ /^.*starting! pid\((\d+)\)/) {
+         #TD Net::Server: 2007/05/02-11:05:24 Amavis (type Net::Server::PreForkSimple) starting! pid(4405)
+         $StartInfo{'Server'}{'pid'} = $1;
+      } elsif ($p2 =~ /^Binding to UNIX socket file (.*) using/ ) {
+         #TD Net::Server: Binding to UNIX socket file /var/spool/amavis/amavisd.sock using SOCK_STREAM
+         $StartInfo{'Server'}{'socket'} = $1;
+      } elsif ($p2 =~ /^Binding to TCP port (\d+) on host (.*)$/ ) {
+         #TD Net::Server: Binding to TCP port 10024 on host 127.0.0.1
+         $StartInfo{'Server'}{'ip'} = "$2:$1";
+      } elsif ($p2 =~ /^Setting ([ug]id) to "([^"]+)"$/ ) {
+         $StartInfo{'Server'}{$1} = $2;
+         #TD Net::Server: Setting gid to "91 91"
+         #TD Net::Server: Setting uid to "91"
+      }
+      # skip others
+
+   } else {
+      # Report any unmatched entries...
+      inc_unmatched('final', $OrigLine);
+   }
+}
+
+########################################
+# Final tabulations, and report printing
+
+# at detail 5, print level 1, detail 6: level 2, ...
+my $max_level_global = $Opts{'detail'} - 4;;
+
+$Totals{'TotalMsgs'} =
+        $Totals{'CleanMsgPassed'}
+      + $Totals{'MalwarePassed'}
+      + $Totals{'SpamPassed'}
+      + $Totals{'BannedNamePassed'}
+      + $Totals{'BadHeaderPassed'}
+      + $Totals{'UncheckedPassed'}
+      + $Totals{'TempfailPassed'}
+      + $Totals{'CleanMsgBlocked'}
+      + $Totals{'MalwareBlocked'}
+      + $Totals{'SpamBlocked'}
+      + $Totals{'BannedNameBlocked'}
+      + $Totals{'BadHeaderBlocked'}
+      + $Totals{'UncheckedBlocked'}
+      + $Totals{'TempfailBlocked'}
+      + $Totals{'SpamDiscarded'}
+      ;
+
+$Totals{'TotalSpams'} =
+      + $Totals{'SpamPassed'}
+      + $Totals{'SpamBlocked'}
+      + $Totals{'SpamDiscarded'}
+      ;
+
+$Totals{'TotalHams'} =
+        $Totals{'CleanMsgPassed'}
+      + $Totals{'CleanMsgBlocked'}
+      + $Totals{'BadHeaderPassed'}
+      ;
+
+# Print the summary report if any key has non-zero data.
+# Note: must explicitely check for any non-zero data,
+# as Totals always has some keys extant.
+#
+for (keys %Totals) {
+   if ($Totals{$_}) {
+      printReports ('Summary', @Formats);
+      last;
+   }
+}
+
+# Print the detailed report, if detail is sufficiently high
+#
+if ($Opts{'detail'} >= 5) {
+   #if (keys %Counts) {
+   if ($Totals{'TotalMsgs'}) {
+      printReports ('Detailed', @Formats);
+      printSpamScoreReport;
+      printSARulesReport;
+      printTimingsReport;
+      if ($Opts{'detail'} >= 10) {
+         printStartupInfoReport;
+      }
+   }
+}
+
+
+# Print unmatched lines
+#
+if (keys %UnmatchedList) {
+   my $line;
+
+   print "\n\n**Unmatched Entries**\n";
+   foreach $line (sort {$UnmatchedList{$b}<=>$UnmatchedList{$a} } keys %UnmatchedList) {
+      printf "%8d   %s\n",  $UnmatchedList{$line}, $line;
+   }
+}
+
+
+##################################################
+
+# Inserts commas in numbers for easier readability
+#
+sub commify ($) {
+    my $text = reverse $_[0];
+    $text =~ s/(\d\d\d)(?=\d)(?!\d*\.)/$1,/g;
+    return scalar reverse $text;
+}
+
+# Unitize a number, and return appropriate printf formatting string
+#
+sub unitize($ $) {
+   my ($num, $fmt) = @_;
+   my $kilobyte = 1024;
+   my $megabyte = 1048576;
+   my $gigabyte = 1073741824;
+   my $terabyte = 1099511627776;
+
+   if ($num >= $terabyte) {
+      $num /= $terabyte;
+      $fmt .= '.3fT';
+   } elsif ($num >= $gigabyte) {
+      $num /= $gigabyte;
+      $fmt .= '.3fG';
+   } elsif ($num >= $megabyte) {
+      $num /= $megabyte;
+      $fmt .= '.3fM';
+   } elsif ($num >= $kilobyte) {
+      $num /= $kilobyte;
+      $fmt .= '.3fK';
+   } else {
+      $fmt .= 'd ';
+   }
+
+   return ($num, $fmt);
+}
+
+# $print_which_report = 1, print count summary; print_which_report = 2, prints hash details
+#
+sub printReports ($ \@) {
+   my ($report, $formats) = @_; 
+   my $i = 1;
+   my $output_occurred = 0;
+   my $sect_had_output = 0;
+
+   if ($report eq "Summary") {
+      print "****** $report ", '*' x ($Opts{'max_report_width'} - 15), "\n\n"   if ($Opts{'detail'} >= 5);
+   } elsif ($report eq "Detailed") {
+      print "\n****** $report ", '*' x ($Opts{'max_report_width'} - 16), "\n";
+   } else {
+      die ("error: report set incorrectly in printReports: $report");
+   }
+
+   for ( @$formats ) {
+      my ($keyname, $numfmt, $desc, $divisor) = ($_->[0], $_->[1],$_->[2], $_->[3]);
+
+      # print count summary
+      if ($report =~ /^S/) {
+
+         # start a new section; controls subsequent newline output
+         if ($keyname eq '__SECTION') {
+            $sect_had_output = 0;
+            next;
+         }
+
+         # print blank line if keyname is null string
+         if ($keyname eq '\n') {
+            print "\n"  if ($output_occurred && $sect_had_output);
+
+         } elsif (my ($sepchar) = ($keyname =~ /^(.)$/)) {
+            printf "%s   %s\n", $sepchar x 8, $sepchar x 48  if ($output_occurred && $sect_had_output);
+
+         } elsif ($Totals{$keyname} > 0) {
+            my $fmt   = '%8';
+            my $extra = ' %25s';
+            my $total = $Totals{$keyname};
+
+            # Z format provides  unitized or unaltered totals, as appropriate
+            if ($numfmt =~ /Z/) {
+               ($total, $fmt) = unitize ($total, $fmt);
+            }
+            else {
+               $fmt .= "$numfmt ";
+               $extra ='';
+            }
+
+            if ($divisor) {
+               if ($$divisor == $Totals{$keyname}) {
+                  printf "$fmt  %-40s 100.00%%\n", $total, $desc;
+               }
+               else {
+                  printf "$fmt  %-40s  %5.2f%%\n", $total, $desc, $Totals{$keyname} * 100 / $$divisor;
+               }
+            }
+            else {
+              printf "$fmt  %-21s $extra\n", $total, $desc, commify ($Totals{$keyname});
+            }
+            $output_occurred++;
+            $sect_had_output++;
+         }
+      }
+      # print hashed details
+      else {
+         next if (! exists $Counts{$keyname});
+
+         my $max_level = exists $Opts{"\L$keyname"} ? $Opts{"\L$keyname"} : 11;
+         my ($count, $listref) = buildTree (%{$Counts{$keyname}}, $max_level, 0);
+
+         if ($count > 0) {
+            #printf "_______________________________________________\n"   if (1 != $i++);
+            #printf "\n"   if (1 != $i++);
+            # print the header
+            $desc =~ s/^\s+//; 
+            printf "\n%8d   $desc %s\n", $count, '-' x ($Opts{'max_report_width'} - 12 - length($desc))  if ((!exists $Opts{"\L$keyname"}) or ($Opts{"\L$keyname"} > 0));
+            #printf "     %s\n", ' ' x length($desc);
+
+            printTree ($listref);
+         }
+      }
+   }
+
+   print "\n";
+}
+
+# Spam score percentiles report
+#
+sub printSpamScoreReport {
+   if ($Opts{'spamscore'} and @SpamScores) {
+      #print "Scores: @SpamScores\n";
+      my @sorted = sort { $a <=> $b } @SpamScores;
+      my @percents = split /[ ,]/, $Opts{'spam_score_percentiles'};
+      my @p = getpercentiles (@sorted, @percents);
+      print "\n======================", "==========" x @percents, "\n";
+      printf "%-22s" . " %8s%%" x @percents , "Spam Score Percentiles", @percents;
+      print "\n----------------------", "----------" x @percents, "\n";
+      printf "%-22s" . " %9.3f" x scalar (@p) . "\n",
+         "Score", @p;
+      print "======================", "==========" x @percents, "\n";
+   }
+}
+
+sub printSARulesReport {
+
+   if ($Opts{'sarules'} and keys %{$Counts{'SArules'}}) {
+      our $maxlen = 0;
+
+      sub getSAHitsReport($ $) {
+         my ($type, $topn) = @_;
+         my $i = 1;
+         my @report = ();
+
+         for (sort { $Counts{'SArules'}{$type}{$b} <=> $Counts{'SArules'}{$type}{$a} } keys %{$Counts{'SArules'}{$type}}) {
+
+            # only show top n lines; all of topn is 0
+            if ($topn and $i > $topn) {
+               push @report, "...\n";
+               last;
+            }
+            my $n     = $Counts{'SArules'}{$type}{$_};
+            my $nham  = $Counts{'SArules'}{'Ham'}{$_};
+            my $nspam = $Counts{'SArules'}{'Spam'}{$_};
+            # rank, count, % msgs, % spam, % ham
+            push @report, sprintf "%4d %8d    %5.2f%%   %5.2f%%   %5.2f%%     %s\n",
+               $i++,
+               $n,
+               $Totals{'TotalMsgs'}  == 0 ? 0 : 100.0 * $n / $Totals{'TotalMsgs'},
+               $Totals{'TotalSpams'} == 0 ? 0 : 100.0 * $nspam / $Totals{'TotalSpams'},
+               $Totals{'TotalHams'}  == 0 ? 0 : 100.0 * $nham  / $Totals{'TotalHams'},
+               $_;
+            my $len = length $report[-1];
+            $maxlen = $len  if ($len > $maxlen);
+         }
+         return @report;
+      }
+      
+      my @report_spam = getSAHitsReport('Spam', $Opts{'sarulestopspam'});
+      my @report_ham  = getSAHitsReport('Ham',  $Opts{'sarulestopham'});
+
+      print "\n", "=" x $maxlen, "\n";
+      print "SpamAssassin Rule Hits: Spam\n";
+      print "-" x $maxlen, "\n";
+      print "Rank     Hits    % Msgs   % Spam    % Ham     Rule\n";
+      print "----     ----    ------   ------    -----     ----\n";
+      print @report_spam;
+
+      print "\n", "=" x $maxlen, "\n";
+      print "SpamAssassin Rule Hits: Ham\n";
+      print "-" x $maxlen, "\n";
+      print "Rank     Hits    % Msgs   % Spam    % Ham     Rule\n";
+      print @report_ham;
+      print "\n", "=" x $maxlen, "\n";
+   }
+}
+
+sub printTimingsReport {
+   # Timing report
+   if ($Opts{'timings'} and %Timings) {
+      my ($pcnt, $subtotal_pcnt, $subtotal_timings, @p);
+      my @percents = split /[ ,]/, $Opts{'timing_percentiles'};
+
+      $subtotal_pcnt = 0.0;
+      print "\n=========================================", "==========" x @percents, "\n";
+      printf "%-21s  %6s %11s" ." %8s%%" x @percents , "Timing Percentiles", "% Time", "Total (s)", @percents;
+      print "\n-----------------------------------------", "----------" x @percents, "\n";
+      for (sort { $Timings{$b} <=> $Timings{$a} } keys %Timings) {
+         $pcnt = ($Timings{$_} / $TimingsTotal) * 100,
+         my @sorted = sort { $a <=> $b } @{$NewTimings{$_}};
+         @p = getpercentiles (@sorted, @percents);
+         #print "Percentiles: @p\n";
+         if ($Opts{'timings'} != 100 and $subtotal_pcnt + $pcnt >= $Opts{'timings'}) {
+            print "...\n";
+            last;
+         }
+         printf "%-21s %6.2f%% %11.3f" . " %9.3f" x scalar (@p) . "\n",
+                  $_,
+                  $pcnt,
+                  $Timings{$_} / 1000, 
+                  map { $_ / 1000 } @p;
+         $subtotal_timings += $Timings{$_};
+         $subtotal_pcnt += $pcnt;
+      }
+      print "=========================================", "==========" x @percents, "\n";
+      printf "%-21s %6.2f%% %11.3f\n",
+         $Opts{'timings'} < 100 ? "Total Time Shown" : "Total Time",
+         $subtotal_pcnt,
+         .001 * ($Opts{'timings'} < 100 ? $subtotal_timings : $TimingsTotal);
+   }
+}
+
+sub printStartupInfoReport {
+
+   # Most recent startup info report
+   if ($Opts{'startinfo'} and keys %StartInfo) {
+
+      sub print2col($ $) {
+         my ($label,$val) = @_;
+         printf "%-50s %s\n", $label, $val;
+      }
+
+      print "\n\nAmavis Startup\n";
+
+      print2col ("    Amavis",       $StartInfo{'ampath'})             if (exists $StartInfo{'ampath'});
+      print2col ("        Version",  $StartInfo{'amversion'})          if (exists $StartInfo{'amversion'});
+      print2col ("        PID",      $StartInfo{'Server'}{'pid'})      if (exists $StartInfo{'Server'}{'pid'});
+      print2col ("        Socket",   $StartInfo{'Server'}{'socket'})   if (exists $StartInfo{'Server'}{'socket'});
+      print2col ("        TCP port", $StartInfo{'Server'}{'ip'})       if (exists $StartInfo{'Server'}{'ip'});
+      print2col ("        UID",      $StartInfo{'Server'}{'uid'})      if (exists $StartInfo{'Server'}{'uid'});
+      print2col ("        GID",      $StartInfo{'Server'}{'gid'})      if (exists $StartInfo{'Server'}{'gid'});
+      print2col ("        Logging",  $StartInfo{'Logging'})            if (exists $StartInfo{'Logging'});
+      print2col ("    SpamAssassin", $StartInfo{'sa_version'})         if (exists $StartInfo{'sa_version'});
+      print2col ("    Database",     $StartInfo{'db'})                 if (exists $StartInfo{'db'});
+      #if (keys %{$StartInfo{'IDs'}}) {
+      #   print "    Process startup user/group:\n";
+      #   print "        User:  $StartInfo{'IDs'}{'user'}, EUID: $StartInfo{'IDs'}{'euid'}, UID: $StartInfo{'IDs'}{'uid'}\n";
+      #   print "        Group: $StartInfo{'IDs'}{'group'}, EGID: $StartInfo{'IDs'}{'egid'}, GID: $StartInfo{'IDs'}{'gid'}\n";
+      #}
+
+      sub print_modules ($ $) {
+         my ($key, $label) = @_;
+         print "    $label\n";
+         foreach (sort keys %{$StartInfo{$key}}) {
+            print "        $_\n";
+            foreach my $module (sort keys %{$StartInfo{$key}{$_}}) {
+               if ($StartInfo{$key}{$_}{$module}) {
+                  print2col ("            " . $module, $StartInfo{$key}{$_}{$module});
+               }
+               else {
+                  print2col ("            " . $module, "");
+               }
+            }
+         }
+      };
+      print_modules('AVScanner', 'Antivirus scanners');
+      print_modules('Code',      'Code, modules and external programs');
+      print_modules('Decoders',  'Decoders');
+
+   }
+}
+
+sub printTree($) {
+   my ($listref) = @_;
+   my ($entry, $rets);
+   my $cutlength = $Opts{'max_report_width'} - 3;
+
+   #print "listref: $listref\n";
+
+   foreach $entry (sort bycount @$listref) {
+      if (ref($entry) ne "HASH") {
+         die "Unexpected entry in tree: $entry\n";
+      }
+      #print "LEVEL: $entry->{LEVEL}, TOTAL: $entry->{TOTAL}, HASH: $entry, DATA: $entry->{DATA}\n";
+
+      # XXX not sure if I want to keep this... just comment out for now
+      # for readability, print a blank line to separate 2nd level headings, but only if children exist
+      #
+      #print "\n"  if (($entry->{LEVEL} == 0) && ($Opts{'detail'} > 5) && ($entry->{CHILDREF} != undef) && (@{$entry->{CHILDREF}} != 1));
+
+      $rets = sprintf "%8d%s%s", $entry->{TOTAL}, '   ' x ($entry->{LEVEL} + 2),  $entry->{DATA};
+      if ($Opts{'debug'}) {
+         printf "%-130s %-60s\n", $rets, $entry->{DEBUG};
+      }
+      else {
+         $rets =~ s/^(.{$cutlength}).*$/$1.../o   if ($Opts{'detail'} <= 10);
+         printf "%s\n", $rets;
+      }
+      printTree ($entry->{CHILDREF}) if ($entry->{CHILDREF} != undef);
+   }
+}
+
+# XXX optimize this using packed default sorting.  Analysis shows speed isn't an issue though
+sub bycount {
+   # Sort by totals, then IP address if one exists, and finally by data as a string
+
+   $b->{TOTAL} <=> $a->{TOTAL}
+
+      ||
+
+   pack('C4' => $a->{DATA} =~ /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/o) cmp
+      pack('C4' => $b->{DATA} =~ /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/o)
+
+      ||
+
+   $a->{DATA} cmp $b->{DATA}
+}
+
+
+#
+# Builds a tree of REC structures from the multi-key %Counts hashes
+# 
+# Parameters:
+#    Hash:  A multi-key hash, with keys being used as category headings, and leaf data
+#           being tallies for that set of keys
+#    Level: This current recursion level.  Call with 0.
+#
+# Returns:
+#    Listref: A listref, where each item in the list is a rec record, described as:
+#           DATA:      a string: a heading, or log data
+#           TOTAL:     an integer: which is the subtotal of this item's children
+#           LEVEL:     an integer > 0: representing this entry's level in the tree
+#           CHILDREF:  a listref: references a list consisting of this node's children
+#    Total: The cummulative total of items found for a given invocation
+#
+
+sub buildTree(\% $ $) {
+   my ($href, $max_level_item, $level) = @_; 
+   my ($subtotal, $childList, $rec);
+
+   my @tmpList;
+   my $item;
+   my $total = 0;
+
+   @tmpList = ();
+
+   foreach $item (sort keys %$href) {
+      if (ref($href->{$item}) eq "HASH") {
+         #print " " x ($level * 4), "HASH: LEVEL $level: Item: $item, type: \"", ref($href->{$item}), "\"\n";
+
+         ($subtotal, $childList) = buildTree (%{$href->{$item}}, $max_level_item, $level + 1);
+
+         if ($level < $max_level_global and $max_level_item > $level) {
+            # me + children
+            $rec = {
+               DATA  => $item,
+               TOTAL => $subtotal,
+               LEVEL => $level,
+            };
+            $rec->{DEBUG} = "L$level: Count: $subtotal, max_level_global: $max_level_global, max_level_item: $max_level_item"      if ($Opts{'debug'});
+
+         #   if ($level > $max_level_global) {
+         #      $rec->{CHILDREF} = undef;
+         #   }
+         #   else {
+               $rec->{CHILDREF} = $childList,
+         #   }
+            push (@tmpList, $rec);
+         }
+
+         $total += $subtotal;
+      }
+      else {
+         if ($item !~ /^$/ and $level < $max_level_global and $max_level_item > $level) {
+            $rec = {
+               DATA  => $item,
+               TOTAL => $href->{$item},
+               LEVEL => $level,
+               CHILDREF => undef,
+            };
+            $rec->{DEBUG} = "L$level: Count: $href->{$item}, max_level_global: $max_level_global, max_level_item: $max_level_item"      if ($Opts{'debug'});
+            push (@tmpList,  $rec);
+         }
+         $total += $href->{$item};
+      }
+   }
+
+   #print " " x ($level * 4), "LEVEL $level: Returning from level $level\n";
+
+   return ($total, \@tmpList);
+}
+
+# Set values for the configuration variables passed via hashref.
+# Variables are of the form ${progname_prefix}_KEYNAME.
+#
+# Because logwatch lowercases all config file entries, KEYNAME is
+# case-insensitive.
+#
+sub env_to_cmdline(\%) {
+   my $href = shift;
+   my ($configvar, $value, $var);
+
+   my @cmdline = ();
+   while ( ($configvar, $value) = each %$href ) {
+      if ($configvar =~ s/^${progname_prefix}_//) {
+         push @cmdline, "--$configvar", "$value";
+      }
+   }
+   return @cmdline;
+}
+
+# Obtains the variables from a logwatch-style .conf file, for use
+# in standalone mode.  Returns an ENV-style hash of key/value pairs.
+#
+sub get_vars_from_file($) {
+   my $file = shift;
+   my %hash;
+
+   open FILE, "$file" or die "unable to open configuration file $file: $!";
+   while (<FILE>) {
+      chomp;
+      if (/^\s*\$(${progname_prefix}_[^=\s]+)\s*=\s*"?([^"]+)"?$/o) {
+         if ($2 =~ /^(?:no|false)$/i) {
+            $hash{$1} = 0;
+         } elsif ($2 =~ /^(?:yes|true)$/i) {
+            $hash{$1} = 1;
+         } else {
+            $hash{$1} = $2;
+         }
+      }
+   }
+   close FILE         or die "failed to close configuration handle for $file: $!";
+
+   return \%hash;
+}
+
+# Returns a list of percentile values given a 
+# sorted array of numeric values.  Uses the formula:
+#
+# For 0 < k < N,  Y(p) = Y[k] + d(Y[k+1] - Y[k])
+# For k = 0,      Y(p) = Y[1]
+# For k = N,      Y(p) = Y[N]
+# 
+# Arg1 is an array ref to the series
+# ArgN is a list of desired percentiles to return
+
+sub getpercentiles(\@ @) { 
+   my ($aref,@plist) = @_;
+   my ($n, $last, $temp, $d, $k, @vals, $Yp);
+
+   $last = $#$aref;
+   $n = $last + 1;
+   #printf "%6d" x $n . "\n", @{$aref};
+
+   foreach my $p (@plist) {
+      $p /= 100.0;
+      $temp = $p * ($n + 1);
+      $k = int ($temp);
+      if ($k == 0) {
+        $Yp = $aref->[0];
+      }
+      elsif ($k - 1 == $n) {
+        $Yp = $aref->[$last];
+      }
+      else {
+         $d = $temp - $k;
+
+         $Yp = $aref->[$k-1] + ($d * ($aref->[$k] - $aref->[$k-1]));
+      }
+      #print "last: $last, n: $n, p: $p, temp: $temp, k: $k, d: $d, Yp: $Yp\n";
+      push @vals, $Yp;
+   }
+
+   return @vals;
+}
+
+sub inc_unmatched($ $) {
+   my ($id, $line) = @_;
+   $UnmatchedList{$line}++;
+   print "UNMATCHED($id): \"$line\"\n"  if ($Opts{'debug'});
+}
+
+sub usage($) {
+   print STDERR "@_\n"  if ($_[0]);
+   print STDERR <<"ENDUSAGE";
+Usage: $progname [ ARGUMENTS ] [logfile ...]
+   ARGUMENTS can be one or more of options listed below.  Later options override earlier ones.
+   Any argument may be abbreviated to an unambiguous length.  Input comes from named logfiles,
+   or STDIN.
+
+   --help                        print usage information
+   --version                     print program version
+   --debug                       provide debug output
+   --detail LEVEL                print LEVEL levels of detail (default 10)
+   --max_report_width WIDTH      limit report width to WIDTH chars (default 100)
+   --timings PERCENT             show top PERCENT percent of the timings report (range 0...100)
+   --timing_percentiles "P1 [P2 ...]"
+                                 set timings report percentiles to P1 [P2 ...] (range 0...100)
+   --[no]spamscore               show spam score percentiles
+   --spam_score_percentiles "P1 [P2 ...]"
+                                 set spam score percentiles to P1 [P2 ...] (range 0...100)
+   --[no]sarules                 show spamassassin spam/ham rules hit
+   --sarulestopham N             show top N spamassassin ham rules hit
+   --sarulestopspam N            show top N spamassassin spam rules hit
+   --[no]startinfo               show latest amavis startup details, if available
+
+     Each option below limits the LEVEL of detail shown in the detailed section of the report.
+
+ENDUSAGE
+   foreach my $var ( @Formats ) {
+      next if ($var->[0] =~ /^.$/);
+      next if ($var->[0] =~ /^\\n$/);
+      next if ($var->[0] =~ /^__/);
+      printf STDERR "   --%-28s%s\n", "\L$var->[0]" . " LEVEL", "section: \"$var->[2]\"";
+   }
+   print "\n";
+   exit exists $Opts{'help'} ? 0 : 1;
+}
+
+sub version($) {
+   print STDERR "@_\n"  if ($_[0]);
+   print STDERR "$progname: $Version\n";
+   exit 0;
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

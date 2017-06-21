@@ -1,0 +1,48 @@
+##########################################################################
+# $Id: sendmail-largeboxes,v 1.7 2005/12/07 19:22:29 bjorn Exp $
+##########################################################################
+
+use strict;
+use POSIX;
+
+my $SPOOLDIR = '';
+my $sizethresh = defined $ENV{sendmail_largeboxes_size} ? uc $ENV{sendmail_largeboxes_size} : 40960000;
+my $title = "Large Mailbox threshold: $sizethresh";
+my $sizebytes = $sizethresh;
+if ($sizethresh =~ /^(\d+)TB?$/i) {
+  $sizebytes = $1 * 1024 ** 4;
+} elsif ($sizethresh =~ /^(\d+)GB?$/i) {
+  $sizebytes = $1 * 1024 ** 3;
+} elsif ($sizethresh =~ /^(\d+)MB?$/i) {
+  $sizebytes = $1 * 1024 ** 2;
+} elsif ($sizethresh =~ /^(\d+)KB?$/i) {
+  $sizebytes = $1 * 1024;
+}
+$title .= ($sizethresh ne $sizebytes) ? " ($sizebytes bytes)\n" : "\n";
+
+# $hostname may be fully-qualified name
+my ($OSname, $hostname, $release, $version, $machine) = POSIX::uname();
+$hostname =~ s/\..*//;
+exit (0) if ($ENV{'LOGWATCH_ONLY_HOSTNAME'} and ($ENV{'LOGWATCH_ONLY_HOSTNAME'} ne $hostname));
+
+if (-e "/var/mail") {
+	$SPOOLDIR = "/var/mail";
+} elsif ( -e "/var/spool/mail") {
+	$SPOOLDIR = "/var/spool/mail";
+} else {
+	print "Can't find spool directory\n";
+}
+
+if ($SPOOLDIR) {
+	opendir(DIR, "$SPOOLDIR") || die "Can not opendir $SPOOLDIR: $!\n";
+	my @files = grep {!/^\./} readdir(DIR);
+	closedir DIR;
+
+	for my $filename (@files) {
+		my $checksize = (stat("$SPOOLDIR/$filename"))[7];
+               if ($checksize >= $sizebytes) {
+                       print "$title Warning: Large mailbox: $filename ($checksize)\n";
+                       $title = "";  # only print at start of report
+		}
+	}
+}

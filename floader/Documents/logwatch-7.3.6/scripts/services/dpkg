@@ -1,0 +1,63 @@
+# Copyright 2006 by Willi Mann <willi@wm1.at>
+###########################################################################
+# $Id: dpkg,v 1.2 2007/02/16 04:15:52 bjorn Exp $
+###########################################################################
+# $Log: dpkg,v $
+# Revision 1.2  2007/02/16 04:15:52  bjorn
+# Using default license for Logwatch, per Willi Mann.
+#
+# Revision 1.1  2006/12/15 04:39:22  bjorn
+# New dpkg scripts, by Willi Mann.
+#
+###########################################################################
+#
+#
+
+use strict;
+
+my @install;
+my @upgrade;
+my @remove;
+my @purge;
+
+my @unknown;
+
+while(my $line=<STDIN>) {
+	chomp $line;
+	if ( my ( $do, $pkg, $ver1, $ver2) = ( $line =~ /^\S+ \S+ (install|upgrade|remove|purge) (\S+) (\S+)(?: (\S+))?/ )) {
+		if(($do eq "remove" or $do eq "purge") and ($ver1 ne $ver2)) {
+			push @unknown, $line;
+		} elsif ($do eq "remove") {
+			push @remove, "$pkg $ver1";
+		} elsif ( $do eq "purge") {
+			push @purge, "$pkg $ver1";
+		} elsif ($ver1 =~ /[<>]/) {
+			push @install, "$pkg $ver2";
+		} else {
+			push @upgrade, "$pkg $ver1 => $ver2";
+		}
+	} elsif ( $line =~ /^\S+ \S+ status / ) {
+		#ignore
+	} else {
+		push @unknown, $line;
+	}
+}
+
+my @k = ( "Installed" , \@install, 
+          "Upgraded" , \@upgrade, 
+	  "Removed", \@remove, 
+	  "Purged", \@purge, 
+	  "Unknown lines", \@unknown);
+
+while (@k > 0) {
+	my $text = shift @k;
+	my $array = shift @k;
+	if(@$array) {
+		print "\n$text:\n";
+		foreach my $line (sort @$array) {
+			print "   $line\n";
+		}
+
+	}
+}
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

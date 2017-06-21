@@ -1,0 +1,24 @@
+##########################################################################
+# $Id: eventlogonlyservice,v 1.1 2007/04/28 22:50:24 bjorn Exp $
+##########################################################################
+# $Log: eventlogonlyservice,v $
+# Revision 1.1  2007/04/28 22:50:24  bjorn
+# Added files for Windows Event Log, by Orion Poplawski.  These are for
+# Windows events logged to a server, using Snare Agent or similar.
+#
+##########################################################################
+# This will pick out only the wanted service from a logfile
+# in Snare Windows Event Log format.  Case insensitive.
+
+$ServiceName = $ARGV[0];
+if ( $ENV{'LOGWATCH_DEBUG'} > 5 ) {
+   print STDERR "DEBUG: Inside OnlyService for $ServiceName\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+    if ($ThisLine =~ m/^... .. ..:..:.. \w+ \w+ \w+\t\d+\t$ServiceName\t\d/oi) {
+      print $ThisLine;
+    }
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

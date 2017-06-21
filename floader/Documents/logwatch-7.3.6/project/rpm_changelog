@@ -1,0 +1,44 @@
+* Fri Sep 15 2006 Kirk Bauer <kirk@kaybee.org> 7.3.1-1
+- Fixed install script to create empty scripts directory in /etc
+
+* Sat Oct 08 2005 Kirk Bauer <kirk@kaybee.org> pre7.0-1
+- Numerous changes, most notably a whole new directory structure.
+
+* Thu Feb 24 2005 Kirk Bauer <kirk@kaybee.org> 6.0.1-1
+- Now includes ignore.conf in the RPM
+
+* Mon Nov 03 2003 Kirk Bauer <kirk@kaybee.org> pre5.0-1
+- Now can build without change as non-root user
+
+* Thu Feb 27 2003 Erik Ogan <erik@ogan.net> 4.3.2
+- Added libdir & lib/Logwatch.pm
+	
+* Sun Oct 13 2002 Kirk Bauer <kirk@kaybee.org> pre4.0-14
+- Changed the 'logwatch' cron.daily job to '0logwatch' to run before logrotate
+
+* Thu Oct 10 2002 Kirk Bauer <kirk@kaybee.org> pre4.0-1
+- Cronjob is now just named logwatch and not 00-logwatch
+
+* Wed May 01 2002 Kirk Bauer <kirk@kaybee.org> 3.0-6
+- up2date packaged... finally!
+
+* Wed May 01 2002 Kirk Bauer <kirk@kaybee.org> 3.0-5
+- Hopefully now properly included the up2date filter!
+
+* Mon Apr 29 2002 Kirk Bauer <kirk@kaybee.org> pre3.0-1
+- Now properly includes logfile-specific scripts
+
+* Tue Apr 09 2002 Kirk Bauer <kirk@kaybee.org> 2.8-2
+- Made man page entry in files list backwards compatible
+
+* Thu Mar 28 2002 Kirk Bauer <kirk@kaybee.org> 2.5-2
+- Updated new changes from Red Hat's rawhide packaging
+
+* Wed Nov 18 1998 Kirk Bauer <kirk@kaybee.org>
+- Modified to comply with RHCN standards
+
+* Sun Feb 23 1998 Kirk Bauer <kirk@kaybee.org>
+- Minor changes and addition of man-page
+
+* Sun Feb 22 1998 Kirk Bauer <kirk@kaybee.org>
+- initial release

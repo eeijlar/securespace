@@ -1,0 +1,39 @@
+##########################################################################
+# $Id: applyeurodate,v 1.2 2006/10/20 16:12:38 bjorn Exp $
+##########################################################################
+# $Log: applyeurodate,v $
+# Revision 1.2  2006/10/20 16:12:38  bjorn
+# Made match on milliseconds optional.
+#
+# Revision 1.1  2006/05/30 19:04:26  bjorn
+# Added fail2ban service, written by Yaroslav Halchenko.
+#
+#
+# This was originally written by 
+#           Yaroslav Halchenko <debian@onerussian.com>
+########################################################
+
+#
+## Modified from applystddate by yoh@onerussian.com to accept dates
+## as reported by fail2ban:
+#2006-03-17 05:17:19,757 WARNING: SSH: Unban 202.63.117.71
+#
+
+use Logwatch ':dates';
+
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+$SearchDate = TimeFilter('%Y-%m-%d %H:%M:%S');
+
+if ( $Debug > 5 ) {
+   print STDERR "DEBUG: Inside ApplyEuroDate...\n";
+   print STDERR "DEBUG: Looking For: " . $SearchDate . "\n";
+}
+
+while (defined($ThisLine = <STDIN>)) {
+   if ($ThisLine =~ m/^$SearchDate(,...)? /o) {
+      print $ThisLine;
+   }
+}
+
+# vi: shiftwidth=3 syntax=perl tabstop=3 et

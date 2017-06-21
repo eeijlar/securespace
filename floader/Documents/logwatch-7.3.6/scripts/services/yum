@@ -1,0 +1,69 @@
+##########################################################################
+# $Id: yum,v 1.8 2007/04/28 22:35:04 bjorn Exp $
+##########################################################################
+                                                                                ########################################################
+# Please send all comments, suggestions, bug reports,
+#    etc, to logwatch-devel@logwatch.org.
+########################################################
+
+$Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+if ( $Debug >= 5 ) {
+   print STDERR "\n\nDEBUG: Inside YUM Filter \n\n";
+   $DebugCounter = 1;
+}
+
+while (defined($ThisLine = <STDIN>)) {
+   if ( $Debug >= 5 ) {
+      print STDERR "DEBUG($DebugCounter): $ThisLine";
+      $DebugCounter++;
+   }
+
+   if ( $ThisLine =~ s/^(?:\(yumex\) )?Updated: ([^ ]+)/$1/ ) {
+      $PackageUpdated{$ThisLine}++;
+   } elsif ( $ThisLine =~ s/^(?:\(yumex\) )?Installed: ([^ ]+)/$1/ ) {
+      $PackageInstalled{$ThisLine}++;
+   } elsif ( $ThisLine =~ s/^(?:\(yumex\) )?Dep Installed: ([^ ]+)/$1/ ) {
+      $PackageDepInstalled{$ThisLine}++;
+   } elsif ( $ThisLine =~ s/^(?:\(yumex\) )?Erased: ([^ ]+)/$1/ ) {
+      $PackageErased{$ThisLine}++;
+   } else {
+      # Report any unmatched entries...
+      push @OtherList,$ThisLine;
+   }
+}
+
+if (keys %PackageInstalled) {
+   print "\nPackages Installed:\n";
+   foreach $ThisOne (keys %PackageInstalled) {
+      print "   " . $ThisOne;
+   }
+}
+if (keys %PackageDepInstalled) {
+   print "\nPackages (Dependency) Installed:\n";
+   foreach $ThisOne (keys %PackageDepInstalled) {
+      print "   " . $ThisOne;
+   }
+}
+if (keys %PackageUpdated) {
+   print "\nPackages Updated:\n";
+   foreach $ThisOne (keys %PackageUpdated) {
+       print "   ". $ThisOne;
+   }
+}
+if (keys %PackageErased) {
+   print "\nPackages Erased:\n";
+   foreach $ThisOne (keys %PackageErased) {
+       print "   ". $ThisOne;
+   }
+}
+
+if ($#OtherList >= 0) {
+   print "\n**Unmatched Entries**\n";
+   print @OtherList;
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
+

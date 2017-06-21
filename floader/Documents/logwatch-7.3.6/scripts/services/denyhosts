@@ -1,0 +1,30 @@
+###########################################################################
+# $Id: denyhosts,v 1.1 2006/11/12 18:32:54 bjorn Exp $
+###########################################################################
+# $Log: denyhosts,v $
+# Revision 1.1  2006/11/12 18:32:54  bjorn
+# New service denyhosts, by grubert.
+#
+###########################################################################
+
+my @Denies = ();
+
+while (defined($ThisLine = <STDIN>)) {
+   chomp($ThisLine);
+   next if ($ThisLine eq "");
+   if ($ThisLine =~ /\snew denied hosts:\s\[([^\]]+)/i) {
+      my $list = $1;
+      $list =~ s/'//g;
+      push(@Denies, split(",", $list));
+   }
+}
+
+if (scalar(@Denies)) {
+   print "\n";
+   print "new denied hosts: ".join(",", @Denies);
+   print "\n";
+}
+
+exit(0);
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et

@@ -1,0 +1,26 @@
+
+##########################################################################
+# $Id: applydate,v 1.5 2005/05/03 19:33:39 bjorn Exp $
+##########################################################################
+
+use POSIX qw(strftime);
+use Logwatch ':dates';
+
+my $time = time;
+my $Debug = $ENV{'LOGWATCH_DEBUG'} || 0;
+
+$SearchDate = TimeFilter('%a %b %e %H:..:.. [^ ]+ %Y - ');
+
+if ($Debug > 5) {
+   print STDERR "DEBUG: Inside ApplyDate (autorpm)...\n";
+   print STDERR "DEBUG: Looking For: $SearchDate or $SearchYear\n";
+}
+
+
+while (defined($ThisLine = <STDIN>)) {
+   if ($ThisLine =~ s/$SearchDate//o) {
+      print $ThisLine;
+   }
+}
+
+# vi: shiftwidth=3 tabstop=3 syntax=perl et
