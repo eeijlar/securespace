@@ -3,9 +3,9 @@
 use Mail::Sendmail qw(sendmail %mailcfg);
 
 $mail{smtp} = 'mail.alma.ch';
-my $mailRecipient = "jk.lawlor\@gmail.com";
+my $mailRecipient = "\@gmail.com";
 my $mailSubject = "Report";
-my $fromAddress = "jk.lawlor\@gmail.com";
+my $fromAddress = "\@gmail.com";
 
 
 open (LOG,">>logfile.txt");
