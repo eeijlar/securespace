@@ -15,7 +15,7 @@
 # -------------------------------------------------------------------------
  
 MyUSER="php-bin"     # USERNAME
-MyPASS="rEnMeWUMxAKRM5pE"       # PASSWORD
+MyPASS=""       # PASSWORD
 MyHOST="localhost"          # Hostname
  
 # Linux bin paths, change this if it can't be autodetected via which command
